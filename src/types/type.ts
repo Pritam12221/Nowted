@@ -1,10 +1,10 @@
-export type Struct = {
-  folderId: string;
-  title: string;
-  content: string;
-  isFavorite: boolean;
-  isArchived: boolean;
-};
+// export type unknown = {
+//   folderId: string;
+//   title: string;
+//   content: string;
+//   isFavorite: boolean;
+//   isArchived: boolean;
+// };
 
 export type Notes = {
   id: string;
@@ -23,4 +23,12 @@ export type Notes = {
     updatedAt: string;
     deletedAt: string;
   };
+};
+
+export type FolderStruct = {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 };

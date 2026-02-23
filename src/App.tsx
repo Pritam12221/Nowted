@@ -1,19 +1,10 @@
+import { RouterProvider } from "react-router-dom";
 import "./App.css";
-import LeftBar from "./components/LeftBar";
-import Notes from "./components/Notes";
+
+import { router } from "./services/routes";
 
 function App() {
-  return (
-    <>
-      <div className="flex bg-neutral-900 h-screen w-full">
-        <LeftBar />
-
-        <div className="flex">
-          <Notes />
-        </div>
-      </div>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
