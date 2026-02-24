@@ -25,15 +25,13 @@ const Recent = () => {
       <div className="flex flex-col gap-2 ">
         {recent.map((items: Notes) => (
           <NavLink
-            key={items.folderId}
+            key={items.id}
             to=""
             className="w-full h-1/4 px-2 py-2 flex items-center gap-3 rounded transition-all hover:bg-zinc-700"
           >
             <div className="flex px-10 gap-3">
               <FileText />
-              <h6 className="self-center font-bold flex">
-                {items.folder.name}
-              </h6>
+              <h6 className="self-center font-bold flex">{items.title}</h6>
             </div>
           </NavLink>
         ))}

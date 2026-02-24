@@ -1,17 +1,27 @@
 import { createBrowserRouter } from "react-router-dom";
 import UI from "../components/UI";
-import { fetchFolder } from "./FolderApi";
-import Folders from "../components/SideComp/components/Folders";
+import Notes from "../components/NoteComp/Notes";
+import { fetchNotesByFolder } from "./FolderApi";
+import { fetchNotesContent } from "./NotesApi";
+import NoteContent from "../components/NoteComp/components/NoteContent";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <UI />,
-    loader: fetchSideBar,
     children: [
-      // { path: "recent", element: <Recent /> },
-      { index: true, element: <Folders />, loader: fetchFolder },
-      // { path: "archived", element: <More /> },
+      {
+        path: ":folder/:folderId",
+        element: <Notes />,
+        loader: fetchNotesByFolder,
+        children: [
+          {
+            path: "notes/:noteId",
+            element: <NoteContent />,
+            loader: fetchNotesContent,
+          },
+        ],
+      },
     ],
   },
 ]);

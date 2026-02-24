@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getNotesbyFolder } from "./NotesApi";
+import type { LoaderFunctionArgs } from "react-router-dom";
 const api = axios.create({
   baseURL: "https://nowted-server.remotestate.com",
 });
@@ -14,12 +16,11 @@ export const postNotes = (post: object) => {
   return api.post("/notes", post);
 };
 
-export const fetchFolder = async ({ params }) => {
-  console.log(params);
-  try {
-    const res = await getFolders();
-    return res.data.folders;
-  } catch (error) {
-    console.log(error);
+export const fetchNotesByFolder = async ({ params }: LoaderFunctionArgs) => {
+  const { folderId } = params;
+  if (!folderId) {
+    throw new Error("id doesn't exist");
   }
+  const res = await getNotesbyFolder(folderId);
+  return res.data.notes;
 };
