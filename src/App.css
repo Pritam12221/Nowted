@@ -11,3 +11,22 @@
     --color-middle: rgba(255, 255, 255, 0.03);
     --color-middle-active: rgba(255, 255, 255, 0.1);
 }
+
+.sk-pulse {
+  @apply animate-pulse;
+}
+.sk-block {
+  @apply bg-zinc-700 rounded;
+}
+.sk-icon {
+  @apply h-5 w-5 bg-zinc-700 rounded shrink-0;
+}
+.sk-line {
+  @apply h-4 bg-zinc-700 rounded;
+}
+.sk-line-full {
+  @apply h-4 w-full bg-zinc-700 rounded;
+}
+.sk-row {
+  @apply flex items-center gap-3 px-10 py-2;
+}

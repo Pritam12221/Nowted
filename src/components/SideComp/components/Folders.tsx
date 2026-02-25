@@ -3,31 +3,40 @@ import { NavLink, useNavigate } from "react-router-dom";
 import type { FolderStruct } from "../../../types/type";
 import { getFolders } from "../../../services/FolderApi";
 import { useEffect, useState } from "react";
+import FoldersSkeleton from "../../SkeletonsLoaders/FoldersLoader";
 
 const Folders = () => {
   const [folder, setFolder] = useState([]);
+  const [load, setLoad] = useState(true);
   const nav = useNavigate();
   useEffect(() => {
     const fetchFolder = async () => {
       try {
         const res = await getFolders();
         setFolder(res.data.folders);
-        // console.log(res.data.folders[0].name);
-        // nav(`/${res.data.folders[0].name}/${res.data.folders[0].id}`);
+        if (
+          res.data.folders[0].name &&
+          res.data.folders[0].id &&
+          !res.data.folderName &&
+          !res.data.categoryName
+        ) {
+          nav(`/${res.data.folders[0].name}/${res.data.folders[0].id}`);
+        }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoad(false);
       }
     };
-    console.log("fetchFolder called");
 
     fetchFolder();
   }, []);
 
-  console.log("Folder file");
+  if (load) return <FoldersSkeleton />;
 
   return (
     <div className="h-1/5-max ">
-      <div className="flex justify-between pr-4">
+      <div className="flex justify-between pr-4 pb-2">
         <h6 className=" px-10">Folders</h6>
         <FolderPlus />
       </div>

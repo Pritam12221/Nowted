@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { LoaderFunction, LoaderFunctionArgs } from "react-router-dom";
-const api = axios.create({
+export const api = axios.create({
   baseURL: "https://nowted-server.remotestate.com",
 });
 
