@@ -5,10 +5,11 @@ import Note from "./Note";
 const NoteList = () => {
   const notes = useLoaderData();
   const { folder } = useParams();
-  console.log("inside noteList", notes);
   return (
-    <div className="w-120 h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white ">
-      <h2 className="text-white text-lg pb-10 font-bold">{folder}</h2>
+    <div className="w-[30%] h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
+      <h2 className="text-white text-lg pb-10 font-bold">
+        {folder != null ? folder : "Favorite Notes"}
+      </h2>
       {notes?.map((items: Notes) => (
         <div key={items.id}>
           <NavLink

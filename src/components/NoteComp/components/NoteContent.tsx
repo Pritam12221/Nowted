@@ -9,7 +9,7 @@ import {
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { format } from "date-fns";
-import { useState } from "react";
+import { use, useState } from "react";
 import {
   changeArchive,
   changeFavorite,
@@ -20,24 +20,29 @@ const NoteContent = () => {
   const note = useLoaderData();
   const newDate = format(new Date(note.createdAt), "dd/MM/yyyy");
   const [more, setMore] = useState(false);
+  const [fav, setFav] = useState(note.isFavorite);
+  const [archive, setArchive] = useState(note.isArchived);
   const rollBack = useNavigate();
   const handleArchive = async () => {
-    await changeArchive(note.id, true);
+    await changeArchive(note.id, note.isArchived);
+    setArchive(!archive);
     setMore(false);
     rollBack(-1);
   };
 
   const handleFavorite = async () => {
-    await changeFavorite(note.id, true);
+    await changeFavorite(note.id, note.isFavorite);
+    setFav(!fav);
     setMore(false);
   };
+
   const handleDelete = async () => {
     await deleteNote(note.id);
     setMore(false);
     rollBack(-1);
   };
   return (
-    <div className="w-full min-w-0 overflow-hidden px-10 py-10 text-white h-screen">
+    <div className="w-full  overflow-hidden px-10 py-10 text-white h-screen">
       <div className="flex justify-between items-start mb-8">
         <h1 className="text-4xl font-bold ">{note.title}</h1>
 
@@ -57,15 +62,18 @@ const NoteContent = () => {
               />
 
               <div className="flex flex-col items-center justify-center  absolute right-0 mt-2 w-52 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl z-20 overflow-hidden h-40 w-60 text-lg">
-                <button
-                  onClick={() => {
-                    handleFavorite;
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
-                >
-                  <Star size={18} className="text-zinc-400" />
-                  Add to favorites
-                </button>
+                <div className={`${archive ? "collapse" : "block"}`}>
+                  <button
+                    onClick={() => {
+                      handleFavorite();
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors`}
+                  >
+                    <Star size={18} className="text-zinc-400" />
+                    {fav === true ? "Unfav" : "Fav"}
+                  </button>
+                </div>
+
                 <button
                   onClick={() => {
                     handleArchive();
@@ -73,17 +81,19 @@ const NoteContent = () => {
                   className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
                 >
                   <Archive size={18} className="text-zinc-400" />
-                  Archived
+                  {archive !== true ? "Archive" : "UnArchive"}
                 </button>
-                <button
-                  onClick={() => {
-                    handleDelete();
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 "
-                >
-                  <Trash2 size={18} />
-                  Delete
-                </button>
+                <div className={`${archive ? "collapse" : "block"}`}>
+                  <button
+                    onClick={() => {
+                      handleDelete();
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 "
+                  >
+                    <Trash2 size={18} />
+                    Delete
+                  </button>
+                </div>
               </div>
             </>
           )}

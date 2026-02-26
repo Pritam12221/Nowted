@@ -1,4 +1,4 @@
-const RecentSkeleton = () => {
+export const RecentLoader = () => {
   return (
     <div className="h-1/5 w-full pt-5 sk-pulse">
       {/* Header */}
@@ -23,4 +23,4 @@ const RecentSkeleton = () => {
   );
 };
 
-export default RecentSkeleton;
+export default RecentLoader;

@@ -1,4 +1,4 @@
-const FoldersSkeleton = () => {
+const FoldersLoader = () => {
   return (
     <div className="h-1/5-max sk-pulse flex flex-col">
       {/* Header */}
@@ -30,4 +30,4 @@ const FoldersSkeleton = () => {
   );
 };
 
-export default FoldersSkeleton;
+export default FoldersLoader;

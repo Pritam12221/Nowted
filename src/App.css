@@ -12,6 +12,10 @@
     --color-middle-active: rgba(255, 255, 255, 0.1);
 }
 
+.scroll {
+  scrollbar-color: rgb(33, 33, 33) black;
+}
+
 .sk-pulse {
   @apply animate-pulse;
 }
