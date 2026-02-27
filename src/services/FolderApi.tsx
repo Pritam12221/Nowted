@@ -12,6 +12,10 @@ export const postFolder = (post: object) => {
   return api.post("/folders", post);
 };
 
+export const renameFolder = (id: string, name: string) => {
+  return api.patch(`/folders/${id}`, { name });
+};
+
 export const postNotes = (post: object) => {
   return api.post("/notes", post);
 };

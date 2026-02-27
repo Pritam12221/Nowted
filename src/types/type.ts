@@ -32,3 +32,9 @@ export type FolderStruct = {
   updatedAt: string;
   deletedAt: string;
 };
+
+export type RenameProps = {
+  folder: FolderStruct;
+  onDelete: (id: string) => void;
+  rename: (id: string, name: string) => void;
+};

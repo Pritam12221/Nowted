@@ -9,7 +9,7 @@ import {
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { format } from "date-fns";
-import { use, useState } from "react";
+import { useState } from "react";
 import {
   changeArchive,
   changeFavorite,
@@ -61,18 +61,16 @@ const NoteContent = () => {
                 onClick={() => setMore(false)}
               />
 
-              <div className="flex flex-col items-center justify-center  absolute right-0 mt-2 w-52 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl z-20 overflow-hidden h-40 w-60 text-lg">
-                <div className={`${archive ? "collapse" : "block"}`}>
-                  <button
-                    onClick={() => {
-                      handleFavorite();
-                    }}
-                    className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors`}
-                  >
-                    <Star size={18} className="text-zinc-400" />
-                    {fav === true ? "Unfav" : "Fav"}
-                  </button>
-                </div>
+              <div className="flex flex-col items-center justify-center  absolute right-0 mt-2 w-52 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl z-20 overflow-hidden  text-lg">
+                <button
+                  onClick={() => {
+                    handleFavorite();
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors ${archive ? "none" : "block"}`}
+                >
+                  <Star size={18} className="text-zinc-400" />
+                  {fav === true ? "Unfav" : "Fav"}
+                </button>
 
                 <button
                   onClick={() => {
@@ -83,17 +81,16 @@ const NoteContent = () => {
                   <Archive size={18} className="text-zinc-400" />
                   {archive !== true ? "Archive" : "UnArchive"}
                 </button>
-                <div className={`${archive ? "collapse" : "block"}`}>
-                  <button
-                    onClick={() => {
-                      handleDelete();
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 "
-                  >
-                    <Trash2 size={18} />
-                    Delete
-                  </button>
-                </div>
+
+                <button
+                  onClick={() => {
+                    handleDelete();
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 ${archive ? "none" : "block"}`}
+                >
+                  <Trash2 size={18} />
+                  Delete
+                </button>
               </div>
             </>
           )}

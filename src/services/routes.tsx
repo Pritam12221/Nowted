@@ -34,6 +34,10 @@ export const router = createBrowserRouter([
         loader: getFav,
         children: [
           {
+            index: true,
+            element: <NoNoteSelected />,
+          },
+          {
             path: "notes/:noteId",
             element: <NoteContent />,
             loader: fetchNotesContent,
@@ -46,6 +50,10 @@ export const router = createBrowserRouter([
         loader: getArchive,
         children: [
           {
+            index: true,
+            element: <NoNoteSelected />,
+          },
+          {
             path: "notes/:noteId",
             element: <NoteContent />,
             loader: fetchNotesContent,
@@ -57,6 +65,10 @@ export const router = createBrowserRouter([
         element: <Notes />,
         loader: getDeleted,
         children: [
+          {
+            index: true,
+            element: <NoNoteSelected />,
+          },
           {
             path: "notes/:noteId",
             element: <NoteContent />,

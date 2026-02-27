@@ -1,16 +1,18 @@
 import { Outlet, useNavigation } from "react-router-dom";
-import NoteList from "./components/NoteList";
-import NoteListSkeleton from "../SkeletonsLoaders/NoteListLoader";
 import NoteContentSkeleton from "../SkeletonsLoaders/NoteContentLoader";
+import NoteListSkeleton from "../SkeletonsLoaders/NoteListLoader";
+import NoteList from "./components/NoteList";
 
 const Notes = () => {
-  const nav = useNavigation();
-  const Loading = nav.state === "loading";
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === "loading";
+
   return (
-    <div className="flex w-full h-screen ">
-      <div className="flex w-full h-screen ">
-        {Loading ? <NoteListSkeleton /> : <NoteList />}
-        {Loading ? <NoteContentSkeleton /> : <Outlet />}
+    <div className="flex w-full h-screen">
+      <div className="flex w-full h-screen">
+        {isLoading ? <NoteListSkeleton /> : <NoteList />}
+        {isLoading ? <NoteContentSkeleton /> : <Outlet />}
       </div>
     </div>
   );

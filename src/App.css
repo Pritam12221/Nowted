@@ -16,6 +16,10 @@
   scrollbar-color: rgb(33, 33, 33) black;
 }
 
+.none {
+  display: none;
+}
+
 .sk-pulse {
   @apply animate-pulse;
 }

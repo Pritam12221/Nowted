@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const More = () => {
   return (
-    <div className="h-1/5  w-full pt-4">
+    <div className="h-1/5  w-full pt-10">
       <h6 className="px-10">More</h6>
       <NavLink
         to="/favorites"
