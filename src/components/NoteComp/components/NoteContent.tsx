@@ -6,7 +6,7 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, useNavigation } from "react-router-dom";
 
 import { format } from "date-fns";
 import { useState } from "react";
@@ -15,8 +15,13 @@ import {
   changeFavorite,
   deleteNote,
 } from "../../../services/MoreApi";
+import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
+import RestoreNote from "./RestoreNotes";
 
 const NoteContent = () => {
+  const navigation = useNavigation();
+  const loadState = navigation.state === "loading";
+  console.log("inside noteConte", loadState);
   const note = useLoaderData();
   const newDate = format(new Date(note.createdAt), "dd/MM/yyyy");
   const [more, setMore] = useState(false);
@@ -41,10 +46,19 @@ const NoteContent = () => {
     setMore(false);
     rollBack(-1);
   };
+
+  if (loadState) {
+    return <NoteContentSkeleton />;
+  }
+
+  if (note.isArchived) {
+    console.log(archive);
+    return <RestoreNote />;
+  }
   return (
     <div className="w-full  overflow-hidden px-10 py-10 text-white h-screen">
       <div className="flex justify-between items-start mb-8">
-        <h1 className="text-4xl font-bold ">{note.title}</h1>
+        <h1 className="text-4xl font-bold truncate">{note.title}</h1>
 
         <div className="relative">
           <button
@@ -119,7 +133,7 @@ const NoteContent = () => {
         </div>
       </div>
 
-      <div className="text-zinc-200 text-sm leading-7 overflow-hidden">
+      <div className="text-zinc-200 text-sm leading-7 overflow-hidden ">
         {note.content ?? "NO contents available"}
       </div>
     </div>

@@ -1,7 +1,11 @@
-import { Folder, FolderPlus, Trash2 } from "lucide-react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import type { FolderStruct, Notes } from "../../../types/type";
-import { getFolders, renameFolder } from "../../../services/FolderApi";
+import { FolderPlus } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import type { FolderStruct } from "../../../types/type";
+import {
+  getFolders,
+  postFolder,
+  renameFolder,
+} from "../../../services/FolderApi";
 import { useEffect, useState } from "react";
 import { deleteFolder } from "../../../services/MoreApi";
 import FoldersLoader from "../../SkeletonsLoaders/FoldersLoader";
@@ -29,6 +33,12 @@ const Folders = () => {
     }
   };
   const nav = useNavigate();
+
+  const handleFolderCreation = () => {
+    postFolder({
+      name: "Untitled",
+    });
+  };
   useEffect(() => {
     const fetchFolder = async () => {
       try {
@@ -60,7 +70,7 @@ const Folders = () => {
     <div className="h-50">
       <div className="flex justify-between pr-4 pb-2">
         <h6 className=" px-10">Folders</h6>
-        <FolderPlus />
+        <FolderPlus onClick={handleFolderCreation} className="cursor-pointer" />
       </div>
 
       <div className="flex flex-col gap-2 relative h-50 overflow-y-auto scroll">

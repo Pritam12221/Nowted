@@ -8,15 +8,19 @@ import {
 import type { Notes } from "../../../types/type";
 import Note from "./Note";
 import NoteListSkeleton from "../../SkeletonsLoaders/NoteListLoader";
-import { useState } from "react";
 
 const NoteList = () => {
   const navigation = useNavigation();
+  const loadState = navigation.state === "loading";
+  console.log("inside noteList", loadState);
   const notes = useLoaderData();
   const location = useLocation();
   const categoryName = location.pathname.split("/")[1].toUpperCase();
   const { folder } = useParams();
 
+  if (loadState) {
+    return <NoteListSkeleton />;
+  }
   return (
     <div className="w-[30%] h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
       <h2 className="text-white text-lg pb-10 font-bold">
