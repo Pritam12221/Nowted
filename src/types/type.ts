@@ -38,3 +38,16 @@ export type RenameProps = {
   onDelete: (id: string) => void;
   rename: (id: string, name: string) => void;
 };
+
+export type RestoreProps = {
+  noteId: string;
+};
+
+export type NoteListProps = {
+  notes: Notes[];
+};
+export type NotesContextStruct = {
+  notes: Notes[];
+  removeNote: (id: string) => void;
+  addNote: (note: Notes) => void;
+};

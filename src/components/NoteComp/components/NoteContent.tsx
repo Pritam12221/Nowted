@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   Archive,
   CalendarDays,
   Ellipsis,
@@ -6,7 +7,12 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { useLoaderData, useNavigate, useNavigation } from "react-router-dom";
+import {
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+  useOutletContext,
+} from "react-router-dom";
 
 import { format } from "date-fns";
 import { useState } from "react";
@@ -15,18 +21,22 @@ import {
   changeFavorite,
   deleteNote,
 } from "../../../services/MoreApi";
-import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
 import RestoreNote from "./RestoreNotes";
+import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import type { NotesContextStruct } from "../../../types/type";
 
 const NoteContent = () => {
   const navigation = useNavigation();
-  const loadState = navigation.state === "loading";
-  console.log("inside noteConte", loadState);
+  const isLoading = navigation.state === "loading";
   const note = useLoaderData();
   const newDate = format(new Date(note.createdAt), "dd/MM/yyyy");
   const [more, setMore] = useState(false);
   const [fav, setFav] = useState(note.isFavorite);
   const [archive, setArchive] = useState(note.isArchived);
+  const [deleted, setDeleted] = useState(false);
+  const { removeNote } = useOutletContext<NotesContextStruct>();
   const rollBack = useNavigate();
   const handleArchive = async () => {
     await changeArchive(note.id, note.isArchived);
@@ -42,18 +52,24 @@ const NoteContent = () => {
   };
 
   const handleDelete = async () => {
-    await deleteNote(note.id);
-    setMore(false);
-    rollBack(-1);
+    try {
+      const res = await deleteNote(note.id);
+      toast.success(res.data, { icon: <Trash2 size={16} /> });
+      setMore(false);
+      setDeleted(true);
+      removeNote(note.id);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message, {
+          icon: <AlertTriangle size={16} />,
+        });
+      }
+    }
   };
 
-  if (loadState) {
-    return <NoteContentSkeleton />;
-  }
-
-  if (note.isArchived) {
-    console.log(archive);
-    return <RestoreNote />;
+  if (isLoading) return <NoteContentSkeleton />;
+  if (deleted) {
+    return <RestoreNote noteId={note.id} />;
   }
   return (
     <div className="w-full  overflow-hidden px-10 py-10 text-white h-screen">

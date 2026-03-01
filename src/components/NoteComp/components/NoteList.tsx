@@ -1,24 +1,24 @@
 import {
   NavLink,
-  useLoaderData,
   useLocation,
   useNavigation,
   useParams,
 } from "react-router-dom";
-import type { Notes } from "../../../types/type";
+import type { NoteListProps, Notes } from "../../../types/type";
 import Note from "./Note";
 import NoteListSkeleton from "../../SkeletonsLoaders/NoteListLoader";
 
-const NoteList = () => {
+const NoteList = ({ notes }: NoteListProps) => {
   const navigation = useNavigation();
-  const loadState = navigation.state === "loading";
-  console.log("inside noteList", loadState);
-  const notes = useLoaderData();
   const location = useLocation();
   const categoryName = location.pathname.split("/")[1].toUpperCase();
-  const { folder } = useParams();
+  const { folder, folderId } = useParams();
 
-  if (loadState) {
+  const currentBase = folderId || categoryName.toLowerCase();
+  const checkFolderId =
+    navigation.state === "loading" &&
+    !navigation.location?.pathname.includes(currentBase);
+  if (checkFolderId) {
     return <NoteListSkeleton />;
   }
   return (

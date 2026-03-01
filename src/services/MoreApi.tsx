@@ -34,3 +34,7 @@ export const getDeleted = async () => {
   console.log(data);
   return data.data.notes;
 };
+
+export const restoreNote = (id: string) => {
+  return api.post(`/notes/${id}/restore`);
+};
