@@ -34,7 +34,7 @@ const NoteContent = () => {
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
   const note = useLoaderData();
-  const { removeNote } = useOutletContext<NotesContextStruct>();
+  const { removeNote, updateNoteList } = useOutletContext<NotesContextStruct>();
   const newDate = format(new Date(note.createdAt), "dd/MM/yyyy");
   const [more, setMore] = useState(false);
   const [fav, setFav] = useState(note.isFavorite);
@@ -96,12 +96,14 @@ const NoteContent = () => {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
+    updateNoteList(note.id, { title: newTitle });
     debouncedSave({ title: newTitle });
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
     setContent(newContent);
+    updateNoteList(note.id, { preview: newContent });
     debouncedSave({ content: newContent });
   };
 

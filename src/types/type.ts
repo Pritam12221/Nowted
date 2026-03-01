@@ -50,9 +50,15 @@ export type NoteListProps = {
 export type NotesContextStruct = {
   notes: Notes[];
   removeNote: (id: string) => void;
+  updateNoteList: (id: string, updates: Partial<Notes>) => void;
 };
 
 export type GlobalContextType = {
   noteList: Notes | null;
   setNoteList: (note: Notes | null) => void;
+};
+
+export type toggleThemeType = {
+  dark: boolean;
+  toggleTheme: () => void;
 };

@@ -16,23 +16,28 @@ const Notes = () => {
 
   useEffect(() => {
     if (globalData?.noteList) {
-      setNotes((prev) => {
-        if (prev.some((n) => n.id === globalData.noteList!.id)) return prev;
-        return [globalData.noteList!, ...prev];
+      setNotes((items) => {
+        if (items.some((n) => n.id === globalData.noteList!.id)) return items;
+        return [globalData.noteList!, ...items];
       });
       globalData.setNoteList(null);
     }
   }, [globalData?.noteList]);
 
   const removeNote = (id: string) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
+    setNotes((items) => items.filter((n) => n.id !== id));
   };
 
+  const updateNoteList = (id: string, updates: Partial<Notes>) => {
+    setNotes((items) =>
+      items.map((n) => (n.id === id ? { ...n, ...updates } : n)),
+    );
+  };
   return (
     <div className="flex w-full h-screen">
       <div className="flex w-full h-screen">
         <NoteList notes={notes} />
-        <Outlet context={{ notes, removeNote }} />
+        <Outlet context={{ notes, removeNote, updateNoteList }} />
       </div>
     </div>
   );
