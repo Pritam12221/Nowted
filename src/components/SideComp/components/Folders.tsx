@@ -15,11 +15,15 @@ const Folders = () => {
   const [folder, setFolder] = useState<FolderStruct[]>([]);
   const [load, setLoad] = useState(true);
   const location = useLocation();
+  const nav = useNavigate();
 
   const handleDelete = async (id: string) => {
     await deleteFolder(id);
     setFolder(folder.filter((item: FolderStruct) => item.id !== id));
-    nav(-1);
+
+    if (location.pathname.includes(id)) {
+      nav(-1);
+    }
   };
 
   const handleRename = async (id: string, name: string) => {
@@ -32,35 +36,43 @@ const Folders = () => {
       console.log(error);
     }
   };
-  const nav = useNavigate();
 
-  const handleFolderCreation = () => {
-    postFolder({
-      name: "Untitled",
-    });
+  const handleFolderCreation = async () => {
+    try {
+      const res = await postFolder({
+        name: "Untitled",
+      });
+      await fetchFolder();
+      nav(`/Untitled/${res.data.folder[0].id}`);
+    } catch (err) {
+      console.log(err);
+    }
   };
-  useEffect(() => {
-    const fetchFolder = async () => {
-      try {
-        const res = await getFolders();
-        setFolder(res.data.folders);
-        //default navigation to first folder
-        if (
-          res.data.folders[0].name &&
-          res.data.folders[0].id &&
-          !res.data.folderName &&
-          !res.data.categoryName &&
-          location.pathname === "/"
-        ) {
-          nav(`/${res.data.folders[0].name}/${res.data.folders[0].id}`);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoad(false);
-      }
-    };
 
+  const fetchFolder = async () => {
+    try {
+      const res = await getFolders();
+      setFolder(res.data.folders);
+      const { folders, folderName, categoryName } = res.data;
+      const firstFold = folders[0];
+      //default navigation to first folder
+      if (
+        firstFold.name &&
+        firstFold.id &&
+        folderName &&
+        categoryName &&
+        location.pathname === "/"
+      ) {
+        nav(`/${firstFold.name}/${firstFold.id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoad(false);
+    }
+  };
+
+  useEffect(() => {
     fetchFolder();
   }, []);
 

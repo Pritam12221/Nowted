@@ -38,3 +38,10 @@ export const getDeleted = async () => {
 export const restoreNote = (id: string) => {
   return api.post(`/notes/${id}/restore`);
 };
+
+export const updateNote = (
+  id: string,
+  data: Partial<{ title: string; content: string }>,
+) => {
+  return api.patch(`/notes/${id}`, data);
+};

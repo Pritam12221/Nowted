@@ -1,54 +1,141 @@
 import {
-  AlertTriangle,
   Archive,
+  AlertTriangle,
   CalendarDays,
   Ellipsis,
   Folder,
   Star,
   Trash2,
+  History,
 } from "lucide-react";
 import {
   useLoaderData,
+  useLocation,
   useNavigate,
   useNavigation,
   useOutletContext,
 } from "react-router-dom";
-
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   changeArchive,
   changeFavorite,
   deleteNote,
+  restoreNote,
+  updateNote,
 } from "../../../services/MoreApi";
-import RestoreNote from "./RestoreNotes";
-import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
+import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
 import type { NotesContextStruct } from "../../../types/type";
 
 const NoteContent = () => {
+  const location = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
   const note = useLoaderData();
+  const { removeNote } = useOutletContext<NotesContextStruct>();
   const newDate = format(new Date(note.createdAt), "dd/MM/yyyy");
   const [more, setMore] = useState(false);
   const [fav, setFav] = useState(note.isFavorite);
   const [archive, setArchive] = useState(note.isArchived);
-  const [deleted, setDeleted] = useState(false);
-  const { removeNote } = useOutletContext<NotesContextStruct>();
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [title, setTitle] = useState(note.title);
+  const [content, setContent] = useState(note.content ?? "");
   const rollBack = useNavigate();
+  const titleFocus = useRef<HTMLInputElement>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const trash = isDeleted || note.deletedAt;
+  const readOnly = trash || archive;
+
+  //mount with this default values
+  useEffect(() => {
+    setTitle(note.title);
+    setContent(note.content ?? "");
+    setFav(note.isFavorite);
+    setArchive(note.isArchived);
+    setIsDeleted(false);
+  }, [note.id]);
+
+  useEffect(() => {
+    if (note.title === "Untitled" && titleFocus.current) {
+      titleFocus.current.focus();
+    }
+  }, [note.id]);
+
+  const debouncedSave = useCallback(
+    (data: { title?: string; content?: string }) => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+      debounceTimer.current = setTimeout(async () => {
+        try {
+          await updateNote(note.id, data);
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            toast.error(err.response?.data?.message, {
+              icon: <AlertTriangle size={16} />,
+            });
+          }
+        }
+      }, 500);
+    },
+    [note.id],
+  );
+
+  useEffect(() => {
+    //
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    debouncedSave({ title: newTitle });
+  };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+    debouncedSave({ content: newContent });
+  };
+
   const handleArchive = async () => {
-    await changeArchive(note.id, note.isArchived);
-    setArchive(!archive);
-    setMore(false);
-    rollBack(-1);
+    try {
+      const res = await changeArchive(note.id, note.isArchived);
+      toast.success(res.data, { icon: <Archive size={16} /> });
+      setArchive(!archive);
+      setMore(false);
+      removeNote(note.id);
+      const checkPath = location.pathname.split("/notes")[0];
+      rollBack(checkPath === "" ? "/" : checkPath);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message, {
+          icon: <AlertTriangle size={16} />,
+        });
+      }
+    }
   };
 
   const handleFavorite = async () => {
-    await changeFavorite(note.id, note.isFavorite);
-    setFav(!fav);
-    setMore(false);
+    try {
+      const res = await changeFavorite(note.id, note.isFavorite);
+      toast.success(res.data, { icon: <Star size={16} /> });
+      setFav(!fav);
+      setMore(false);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message, {
+          icon: <AlertTriangle size={16} />,
+        });
+      }
+    }
   };
 
   const handleDelete = async () => {
@@ -56,8 +143,29 @@ const NoteContent = () => {
       const res = await deleteNote(note.id);
       toast.success(res.data, { icon: <Trash2 size={16} /> });
       setMore(false);
-      setDeleted(true);
+      setIsDeleted(true);
       removeNote(note.id);
+      const checkPath = location.pathname.split("/notes")[0];
+      rollBack(checkPath === "" ? "/" : checkPath);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message, {
+          icon: <AlertTriangle size={16} />,
+        });
+      }
+    }
+  };
+
+  const handleRestore = async () => {
+    try {
+      const res = await restoreNote(note.id);
+      toast.success(res.data, { icon: <History size={16} /> });
+      setIsDeleted(false);
+      setMore(false);
+      removeNote(note.id);
+
+      const checkPath = location.pathname.split("/notes")[0];
+      rollBack(checkPath);
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message, {
@@ -68,13 +176,19 @@ const NoteContent = () => {
   };
 
   if (isLoading) return <NoteContentSkeleton />;
-  if (deleted) {
-    return <RestoreNote noteId={note.id} />;
-  }
+
   return (
-    <div className="w-full  overflow-hidden px-10 py-10 text-white h-screen">
+    <div className="w-full overflow-hidden px-10 py-10 text-white h-screen flex flex-col">
       <div className="flex justify-between items-start mb-8">
-        <h1 className="text-4xl font-bold truncate">{note.title}</h1>
+        <input
+          ref={titleFocus}
+          type="text"
+          value={title}
+          onChange={handleTitleChange}
+          readOnly={readOnly}
+          className="text-4xl font-bold bg-transparent outline-none border-none w-full mr-4 truncate"
+          placeholder="Untitled"
+        />
 
         <div className="relative">
           <button
@@ -92,35 +206,49 @@ const NoteContent = () => {
               />
 
               <div className="flex flex-col items-center justify-center  absolute right-0 mt-2 w-52 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl z-20 overflow-hidden  text-lg">
-                <button
-                  onClick={() => {
-                    handleFavorite();
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors ${archive ? "none" : "block"}`}
-                >
-                  <Star size={18} className="text-zinc-400" />
-                  {fav === true ? "Unfav" : "Fav"}
-                </button>
+                {trash ? (
+                  <button
+                    onClick={() => {
+                      handleRestore();
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
+                  >
+                    <History size={18} className="text-zinc-400" />
+                    Restore
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        handleFavorite();
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors ${archive ? "none" : "block"}`}
+                    >
+                      <Star size={18} className="text-zinc-400" />
+                      {fav === true ? "Unfav" : "Fav"}
+                    </button>
 
-                <button
-                  onClick={() => {
-                    handleArchive();
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
-                >
-                  <Archive size={18} className="text-zinc-400" />
-                  {archive !== true ? "Archive" : "UnArchive"}
-                </button>
+                    <button
+                      onClick={() => {
+                        handleArchive();
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
+                    >
+                      <Archive size={18} className="text-zinc-400" />
+                      {archive !== true ? "Archive" : "UnArchive"}
+                    </button>
 
-                <button
-                  onClick={() => {
-                    handleDelete();
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 ${archive ? "none" : "block"}`}
-                >
-                  <Trash2 size={18} />
-                  Delete
-                </button>
+                    <button
+                      onClick={() => {
+                        handleDelete();
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 ${archive ? "none" : "block"}`}
+                    >
+                      <Trash2 size={18} />
+                      Delete
+                    </button>
+                  </>
+                )}
               </div>
             </>
           )}
@@ -149,9 +277,13 @@ const NoteContent = () => {
         </div>
       </div>
 
-      <div className="text-zinc-200 text-sm leading-7 overflow-hidden ">
-        {note.content ?? "NO contents available"}
-      </div>
+      <textarea
+        value={content}
+        onChange={handleContentChange}
+        readOnly={readOnly}
+        className="text-zinc-200 text-sm leading-7 bg-transparent outline-none border-none resize-none flex-1 w-full"
+        placeholder="start from here"
+      />
     </div>
   );
 };

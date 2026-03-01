@@ -41,6 +41,7 @@ export type RenameProps = {
 
 export type RestoreProps = {
   noteId: string;
+  noteTitle: string;
 };
 
 export type NoteListProps = {
@@ -49,5 +50,9 @@ export type NoteListProps = {
 export type NotesContextStruct = {
   notes: Notes[];
   removeNote: (id: string) => void;
-  addNote: (note: Notes) => void;
+};
+
+export type GlobalContextType = {
+  noteList: Notes | null;
+  setNoteList: (note: Notes | null) => void;
 };

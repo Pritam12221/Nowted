@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { restoreNote } from "../../../services/MoreApi";
 import type { RestoreProps } from "../../../types/type";
-const RestoreNote = ({ noteId }: RestoreProps) => {
+const RestoreNote = ({ noteId, noteTitle }: RestoreProps) => {
   const navigate = useNavigate();
   const handleRestore = async () => {
     try {
@@ -25,7 +25,7 @@ const RestoreNote = ({ noteId }: RestoreProps) => {
       <div className="bg-zinc-800 p-6 rounded-2xl mb-2">
         <History />
       </div>
-      <h2 className="text-xl font-semibold">Restore{}</h2>
+      <h2 className="text-xl font-semibold">Restore"{noteTitle}"</h2>
       <p className="text-zinc-500 text-sm text-center w-1/2">
         Don't want to lose this note? It's not too late! Just click the
         'Restore' button and it will be added back to your list. It's that
