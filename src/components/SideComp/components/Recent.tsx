@@ -1,27 +1,28 @@
 import { FileText } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import type { Notes } from "../../../types/type";
+import type { fetchRecentType, Notes } from "../../../types/type";
 import { getRecentNotes } from "../../../services/NotesApi";
 import RecentSkeleton, {
   RecentLoader,
 } from "../../SkeletonsLoaders/RecentLoader";
+import { GlobalContext } from "../../UI";
 
 const Recent = () => {
-  const [recent, setRecent] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const data = useContext(GlobalContext);
+  if (!data) {
+    return;
+  }
+  const { fetchRecent, recent } = data;
   useEffect(() => {
-    const fetchRecent = async () => {
-      try {
-        const res = await getRecentNotes();
-        setRecent(res.data.recentNotes);
-      } catch (error) {
-        console.error("Error occured", error);
-      } finally {
-        setLoading(false);
-      }
+    const fetch = async () => {
+      setLoading(true);
+      await fetchRecent();
+      setLoading(false);
     };
-    fetchRecent();
+
+    fetch();
   }, []);
   if (loading) return <RecentLoader />;
   return (

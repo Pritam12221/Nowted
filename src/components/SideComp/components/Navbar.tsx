@@ -11,7 +11,11 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { folder, folderId } = useParams();
   const globalContext = useContext(GlobalContext);
+  if (!globalContext) {
+    return null;
+  }
 
+  const { fetchRecent } = globalContext;
   const handleNewNote = async () => {
     try {
       const res = await postNotes({ folderId, title: "Untitled" });
@@ -35,6 +39,7 @@ const Navbar = () => {
           },
         });
       }
+      fetchRecent();
       navigate(`/${folder}/${folderId}/notes/${res.data.id}`);
     } catch (err) {
       if (err instanceof AxiosError) {

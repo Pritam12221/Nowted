@@ -3,14 +3,25 @@ import LeftBar from "./SideComp/LeftBar";
 import "../App.css";
 import type { GlobalContextType, Notes } from "../types/type";
 import { createContext, useState } from "react";
+import { getRecentNotes } from "../services/NotesApi";
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
-
 const UI = () => {
   const [noteList, setNoteList] = useState<Notes | null>(null);
+  const [recent, setRecent] = useState<Notes[]>([]);
+  const fetchRecent = async () => {
+    try {
+      const res = await getRecentNotes();
+      setRecent(res.data.recentNotes);
+    } catch (error) {
+      console.error("Error occured", error);
+    }
+  };
 
   return (
-    <GlobalContext.Provider value={{ noteList, setNoteList }}>
+    <GlobalContext.Provider
+      value={{ noteList, setNoteList, fetchRecent, recent }}
+    >
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
         <LeftBar />
         <Outlet />
