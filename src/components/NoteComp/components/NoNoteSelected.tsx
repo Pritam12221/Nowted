@@ -8,7 +8,8 @@ const NoNoteSelected = () => {
       </div>
       <h2 className="text-xl font-semibold">Select a note to view</h2>
       <p className="text-zinc-500 text-sm text-center w-1/2">
-        Choose a note from the list on the left to view its contents or create a new note to add to your collection.
+        Choose a note from the list on the left to view its contents or create a
+        new note to add to your collection.
       </p>
     </div>
   );

@@ -42,6 +42,7 @@ export type RenameProps = {
 export type RestoreProps = {
   noteId: string;
   noteTitle: string;
+  removeNote: (id: string) => void;
 };
 
 export type NoteListProps = {

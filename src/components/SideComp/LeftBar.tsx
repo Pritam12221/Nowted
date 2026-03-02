@@ -10,35 +10,33 @@ const LeftBar = () => {
   const themeContext = useContext(ToggleThemeContext);
 
   return (
-    <>
-      <div className="flex flex-col gap-3 pt-6 h-screen w-120 text-primary">
-        <Navbar />
-        <Recent />
-        <Folders />
-        <More />
+    <div className="flex flex-col gap-3 pt-6 h-screen w-120 text-primary">
+      <Navbar />
+      <Recent />
+      <Folders />
+      <More />
 
-        {themeContext && (
-          <div className="mt-auto px-10 pb-6">
-            <button
-              onClick={themeContext.toggleTheme}
-              className="flex items-center gap-3 px-4 py-2 hover:bg-zinc-800 rounded-md transition-colors w-full cursor-pointer text-zinc-400 hover:text-white"
-            >
-              {themeContext.dark ? (
-                <>
-                  <Sun size={18} />
-                  <p>Light Mode</p>
-                </>
-              ) : (
-                <>
-                  <Moon size={18} />
-                  <p>Dark Mode</p>
-                </>
-              )}
-            </button>
-          </div>
-        )}
-      </div>
-    </>
+      {themeContext && (
+        <div className="mt-auto px-10 pb-6">
+          <button
+            onClick={themeContext.toggleTheme}
+            className="flex items-center gap-3 px-4 py-2 hover:bg-zinc-800 rounded-md transition-colors w-full cursor-pointer text-zinc-400 hover:text-white"
+          >
+            {themeContext.dark ? (
+              <>
+                <Sun size={18} />
+                <p>Light Mode</p>
+              </>
+            ) : (
+              <>
+                <Moon size={18} />
+                <p>Dark Mode</p>
+              </>
+            )}
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -5,8 +5,8 @@ export const ToggleThemeContext = createContext<toggleThemeType | null>(null);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [dark, setdark] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    return saved ? saved === "dark" : true;
+    const save = localStorage.getItem("theme");
+    return save ? save === "dark" : true;
   });
 
   useEffect(() => {

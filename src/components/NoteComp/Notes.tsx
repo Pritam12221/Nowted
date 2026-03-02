@@ -24,10 +24,6 @@ const Notes = () => {
     }
   }, [globalData?.noteList]);
 
-  const removeNote = (id: string) => {
-    setNotes((items) => items.filter((n) => n.id !== id));
-  };
-
   const updateNoteList = (id: string, updates: Partial<Notes>) => {
     setNotes((items) =>
       items.map((n) => (n.id === id ? { ...n, ...updates } : n)),
@@ -35,10 +31,8 @@ const Notes = () => {
   };
   return (
     <div className="flex w-full h-screen">
-      <div className="flex w-full h-screen">
-        <NoteList notes={notes} />
-        <Outlet context={{ notes, removeNote, updateNoteList }} />
-      </div>
+      <NoteList notes={notes} />
+      <Outlet context={{ notes, updateNoteList }} />
     </div>
   );
 };

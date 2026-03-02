@@ -36,6 +36,7 @@ export const getDeleted = async () => {
 };
 
 export const restoreNote = (id: string) => {
+  console.log("inside restore", id);
   return api.post(`/notes/${id}/restore`);
 };
 

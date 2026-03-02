@@ -13,10 +13,7 @@ const UI = () => {
     <GlobalContext.Provider value={{ noteList, setNoteList }}>
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
         <LeftBar />
-
-        <div className="flex w-full h-screen">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </GlobalContext.Provider>
   );

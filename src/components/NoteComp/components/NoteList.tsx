@@ -22,8 +22,8 @@ const NoteList = ({ notes }: NoteListProps) => {
     return <NoteListSkeleton />;
   }
   return (
-    <div className="w-[30%] h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
-      <h2 className="text-white text-lg pb-10 font-bold">
+    <div className=" h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
+      <h2 className="text-white text-lg pb-2 font-bold w-120">
         {folder ? folder : categoryName}
       </h2>
       {notes?.map((items: Notes) => (
@@ -31,7 +31,7 @@ const NoteList = ({ notes }: NoteListProps) => {
           <NavLink
             to={`notes/${items.id}`}
             className={({ isActive }) =>
-              ` w-fixed px-3 py-3 rounded-lg bg-primary-button hover:bg-zinc-700 flex flex-col gap-2 transition-all ease-in-out ${isActive ? "bg-primary-hover" : ""}`
+              ` w-fixed px-3 py-3 rounded-lg bg-primary-button flex flex-col gap-2 transition-all ease-in-out ${isActive ? "bg-primary-hover" : "bg-primary-button hover:bg-zinc-650"}`
             }
           >
             <Note value={items} />

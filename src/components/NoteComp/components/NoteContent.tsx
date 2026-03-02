@@ -14,6 +14,7 @@ import {
   useNavigate,
   useNavigation,
   useOutletContext,
+  useRevalidator,
 } from "react-router-dom";
 import { format } from "date-fns";
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -21,14 +22,13 @@ import {
   changeArchive,
   changeFavorite,
   deleteNote,
-  restoreNote,
   updateNote,
 } from "../../../services/MoreApi";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
 import type { NotesContextStruct } from "../../../types/type";
-
+import RestoreNotes from "./RestoreNotes";
 const NoteContent = () => {
   const location = useLocation();
   const navigation = useNavigation();
@@ -39,23 +39,21 @@ const NoteContent = () => {
   const [more, setMore] = useState(false);
   const [fav, setFav] = useState(note.isFavorite);
   const [archive, setArchive] = useState(note.isArchived);
-  const [isDeleted, setIsDeleted] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content ?? "");
   const rollBack = useNavigate();
   const titleFocus = useRef<HTMLInputElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const trash = isDeleted || note.deletedAt;
-  const readOnly = trash || archive;
-
+  const [del, setDel] = useState(false);
+  const trash = del || note.deletedAt;
+  const readOnly = note.deletedAt;
+  const revalidator = useRevalidator();
   //mount with this default values
   useEffect(() => {
     setTitle(note.title);
     setContent(note.content ?? "");
     setFav(note.isFavorite);
     setArchive(note.isArchived);
-    setIsDeleted(false);
   }, [note.id]);
 
   useEffect(() => {
@@ -85,7 +83,7 @@ const NoteContent = () => {
   );
 
   useEffect(() => {
-    //
+    //clean up function if user navigates somewhere else
     return () => {
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
@@ -113,7 +111,7 @@ const NoteContent = () => {
       toast.success(res.data, { icon: <Archive size={16} /> });
       setArchive(!archive);
       setMore(false);
-      removeNote(note.id);
+      revalidator.revalidate();
       const checkPath = location.pathname.split("/notes")[0];
       rollBack(checkPath === "" ? "/" : checkPath);
     } catch (err) {
@@ -131,6 +129,9 @@ const NoteContent = () => {
       toast.success(res.data, { icon: <Star size={16} /> });
       setFav(!fav);
       setMore(false);
+      revalidator.revalidate();
+      const checkPath = location.pathname.split("/notes")[0];
+      rollBack(checkPath === "" ? "/" : checkPath);
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message, {
@@ -145,29 +146,8 @@ const NoteContent = () => {
       const res = await deleteNote(note.id);
       toast.success(res.data, { icon: <Trash2 size={16} /> });
       setMore(false);
-      setIsDeleted(true);
-      removeNote(note.id);
-      const checkPath = location.pathname.split("/notes")[0];
-      rollBack(checkPath === "" ? "/" : checkPath);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err.response?.data?.message, {
-          icon: <AlertTriangle size={16} />,
-        });
-      }
-    }
-  };
-
-  const handleRestore = async () => {
-    try {
-      const res = await restoreNote(note.id);
-      toast.success(res.data, { icon: <History size={16} /> });
-      setIsDeleted(false);
-      setMore(false);
-      removeNote(note.id);
-
-      const checkPath = location.pathname.split("/notes")[0];
-      rollBack(checkPath);
+      setDel(true);
+      revalidator.revalidate();
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message, {
@@ -178,6 +158,14 @@ const NoteContent = () => {
   };
 
   if (isLoading) return <NoteContentSkeleton />;
+  if (trash)
+    return (
+      <RestoreNotes
+        noteId={note.id}
+        noteTitle={note.title}
+        removeNote={removeNote}
+      />
+    );
 
   return (
     <div className="w-full overflow-hidden px-10 py-10 text-white h-screen flex flex-col">
@@ -208,49 +196,37 @@ const NoteContent = () => {
               />
 
               <div className="flex flex-col items-center justify-center  absolute right-0 mt-2 w-52 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl z-20 overflow-hidden  text-lg">
-                {trash ? (
+                <>
                   <button
                     onClick={() => {
-                      handleRestore();
+                      handleFavorite();
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors ${archive ? "none" : "block"}`}
+                  >
+                    <Star size={18} className="text-zinc-400" />
+                    {fav === true ? "Unfav" : "Fav"}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      handleArchive();
                     }}
                     className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
                   >
-                    <History size={18} className="text-zinc-400" />
-                    Restore
+                    <Archive size={18} className="text-zinc-400" />
+                    {archive !== true ? "Archive" : "UnArchive"}
                   </button>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        handleFavorite();
-                      }}
-                      className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors ${archive ? "none" : "block"}`}
-                    >
-                      <Star size={18} className="text-zinc-400" />
-                      {fav === true ? "Unfav" : "Fav"}
-                    </button>
 
-                    <button
-                      onClick={() => {
-                        handleArchive();
-                      }}
-                      className="w-full flex items-center gap-3 px-4 py-3  text-zinc-200 hover:bg-zinc-700 transition-colors"
-                    >
-                      <Archive size={18} className="text-zinc-400" />
-                      {archive !== true ? "Archive" : "UnArchive"}
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        handleDelete();
-                      }}
-                      className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 ${archive ? "none" : "block"}`}
-                    >
-                      <Trash2 size={18} />
-                      Delete
-                    </button>
-                  </>
-                )}
+                  <button
+                    onClick={() => {
+                      handleDelete();
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 ${archive ? "none" : "block"}`}
+                  >
+                    <Trash2 size={18} />
+                    Delete
+                  </button>
+                </>
               </div>
             </>
           )}
