@@ -6,7 +6,6 @@ import {
   Folder,
   Star,
   Trash2,
-  History,
 } from "lucide-react";
 import {
   useLoaderData,
@@ -44,10 +43,10 @@ const NoteContent = () => {
   const rollBack = useNavigate();
   const titleFocus = useRef<HTMLInputElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [del, setDel] = useState(false);
-  const trash = del || note.deletedAt;
+  const trash = Boolean(note.deletedAt);
   const readOnly = note.deletedAt;
   const revalidator = useRevalidator();
+  const nav = useNavigate();
   //mount with this default values
   useEffect(() => {
     setTitle(note.title);
@@ -71,8 +70,8 @@ const NoteContent = () => {
         try {
           await updateNote(note.id, data);
         } catch (err) {
-          if (err instanceof AxiosError) {
-            toast.error(err.response?.data?.message, {
+          if (err instanceof Error) {
+            toast.error(err.message, {
               icon: <AlertTriangle size={16} />,
             });
           }
@@ -115,8 +114,8 @@ const NoteContent = () => {
       const checkPath = location.pathname.split("/notes")[0];
       rollBack(checkPath === "" ? "/" : checkPath);
     } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err.response?.data?.message, {
+      if (err instanceof Error) {
+        toast.error(err?.message, {
           icon: <AlertTriangle size={16} />,
         });
       }
@@ -130,8 +129,6 @@ const NoteContent = () => {
       setFav(!fav);
       setMore(false);
       revalidator.revalidate();
-      const checkPath = location.pathname.split("/notes")[0];
-      rollBack(checkPath === "" ? "/" : checkPath);
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message, {
@@ -144,9 +141,8 @@ const NoteContent = () => {
   const handleDelete = async () => {
     try {
       const res = await deleteNote(note.id);
-      toast.success(res.data, { icon: <Trash2 size={16} /> });
+      toast.success("Note deleted", { icon: <Trash2 size={16} /> });
       setMore(false);
-      setDel(true);
       revalidator.revalidate();
     } catch (err) {
       if (err instanceof AxiosError) {

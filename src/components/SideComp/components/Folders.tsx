@@ -55,6 +55,7 @@ const Folders = () => {
       setFolder(res.data.folders);
       const { folders, folderName, categoryName } = res.data;
       const firstFold = folders[0];
+
       //default navigation to first folder
       if (
         firstFold.name &&

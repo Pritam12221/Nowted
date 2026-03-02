@@ -4,6 +4,7 @@ import "../App.css";
 import type { GlobalContextType, Notes } from "../types/type";
 import { createContext, useState } from "react";
 import { getRecentNotes } from "../services/NotesApi";
+import { Toaster } from "react-hot-toast";
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 const UI = () => {
@@ -23,6 +24,7 @@ const UI = () => {
       value={{ noteList, setNoteList, fetchRecent, recent }}
     >
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
+        <Toaster />
         <LeftBar />
         <Outlet />
       </div>
