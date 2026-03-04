@@ -33,7 +33,7 @@ const Navbar = () => {
       navigate(`/${folder}/${folderId}/notes/${res.data.id}`);
     } catch (err) {
       if (err instanceof AxiosError) {
-        toast.error(err.response?.data?.message, {
+        toast.error("can't create note here", {
           icon: <AlertTriangle size={16} />,
         });
       }

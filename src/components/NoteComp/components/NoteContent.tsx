@@ -6,6 +6,7 @@ import {
   Folder,
   Star,
   Trash2,
+  ChevronDown,
 } from "lucide-react";
 import {
   useLoaderData,
@@ -26,9 +27,10 @@ import {
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
-import type { NotesContextStruct } from "../../../types/type";
+import type { FolderStruct, NotesContextStruct } from "../../../types/type";
 import RestoreNotes from "./RestoreNotes";
 import { GlobalContext } from "../../UI";
+import { getFolders } from "../../../services/FolderApi";
 const NoteContent = () => {
   const globalData = useContext(GlobalContext);
   const location = useLocation();
@@ -45,9 +47,12 @@ const NoteContent = () => {
   const rollBack = useNavigate();
   const titleFocus = useRef<HTMLInputElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [dropdown, setdropdown] = useState(false);
+  const [folder, setfolder] = useState<FolderStruct[]>([]);
   const trash = Boolean(note.deletedAt);
   const readOnly = note.deletedAt;
   const revalidator = useRevalidator();
+
   //mount with this default values
   useEffect(() => {
     setTitle(note.title);
@@ -95,6 +100,22 @@ const NoteContent = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const loadFolders = async () => {
+      try {
+        const res = await getFolders();
+        const fetchedFolders = res.data?.folders || res.data || [];
+        setfolder(Array.isArray(fetchedFolders) ? fetchedFolders : []);
+      } catch (e) {
+        console.error("Failed to load folders");
+      }
+    };
+    if (!readOnly) {
+      loadFolders();
+    }
+  }, [note.id, readOnly, globalData?.dropdownRefresh]);
+
+  //handlers
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
@@ -155,6 +176,20 @@ const NoteContent = () => {
           icon: <AlertTriangle size={16} />,
         });
       }
+    }
+  };
+  const handleFolderChange = async (targetFolder: string) => {
+    try {
+      setdropdown(false);
+      await updateNote(note.id, { folderId: targetFolder });
+      toast.success("Note moved");
+      revalidator.revalidate();
+      const folderId = folder.find((f) => f.id === targetFolder);
+      if (folderId) {
+        rollBack(`/${folderId.name}/${targetFolder}/notes/${note.id}`);
+      }
+    } catch (err) {
+      toast.error("Failed to move note");
     }
   };
 
@@ -250,12 +285,42 @@ const NoteContent = () => {
             <Folder size={16} />
             <h2 className="text-sm">Folder</h2>
           </div>
-          <h2 className="text-sm text-zinc-300 underline underline-offset-2">
-            {note.folder?.name}
-          </h2>
+          <div className="relative">
+            <button
+              onClick={() => !readOnly && setdropdown(!dropdown)}
+              className={`flex items-center gap-2 text-sm text-zinc-300 underline underline-offset-2 hover:text-white transition-colors ${readOnly ? "cursor-default opacity-50" : "cursor-pointer"}`}
+            >
+              {note.folder?.name || "None"}
+              {!readOnly && <ChevronDown size={14} />}
+            </button>
+
+            {dropdown && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setdropdown(false)}
+                />
+                <div className="absolute left-0 top-full mt-2 w-48 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl z-20 py-1 max-h-48 overflow-y-auto custom-scrollbar">
+                  {folder.map((items) => (
+                    <button
+                      key={items.id}
+                      onClick={() => handleFolderChange(items.id)}
+                      className="w-full text-left px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors truncate"
+                    >
+                      {items.name}
+                    </button>
+                  ))}
+                  {folder.length === 0 && (
+                    <div className="px-4 py-2 text-sm text-zinc-500">
+                      No folders available
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-
       <textarea
         value={content}
         onChange={handleContentChange}

@@ -43,7 +43,7 @@ export const restoreNote = (id: string) => {
 
 export const updateNote = (
   id: string,
-  data: Partial<{ title: string; content: string }>,
+  data: Partial<{ title: string; content: string; folderId: string }>,
 ) => {
   return api.patch(`/notes/${id}`, data);
 };

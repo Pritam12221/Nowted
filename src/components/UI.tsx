@@ -9,6 +9,11 @@ import { Toaster } from "react-hot-toast";
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 const UI = () => {
   const [recent, setRecent] = useState<Notes[]>([]);
+  const [dropdownFetch, setdropdownFetch] = useState(false);
+
+  const dropdownRefresh = () => {
+    setdropdownFetch((prev) => !prev);
+  };
   const fetchRecent = async () => {
     try {
       const res = await getRecentNotes();
@@ -19,7 +24,7 @@ const UI = () => {
   };
 
   return (
-    <GlobalContext.Provider value={{ fetchRecent, recent }}>
+    <GlobalContext.Provider value={{ fetchRecent, recent, dropdownRefresh }}>
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
         <Toaster
           position="bottom-right"

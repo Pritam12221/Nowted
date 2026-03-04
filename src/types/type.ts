@@ -57,6 +57,8 @@ export type NotesContextStruct = {
 export type GlobalContextType = {
   fetchRecent: () => Promise<void>;
   recent: Notes[];
+  dropdownRefresh: () => void;
+  dropdownFetch: boolean;
 };
 
 export type toggleThemeType = {
