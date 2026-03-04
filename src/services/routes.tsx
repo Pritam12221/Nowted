@@ -5,7 +5,7 @@ import { fetchNotesContent } from "./NotesApi";
 import NoteContent from "../components/NoteComp/components/NoteContent";
 import NoNoteSelected from "../components/NoteComp/components/NoNoteSelected";
 import { getArchive, getDeleted, getFav } from "./MoreApi";
-import Notes from "../components/NoteComp/Notes";
+import Notes from "../components/NoteComp/NotesWrapper";
 
 export const router = createBrowserRouter([
   {

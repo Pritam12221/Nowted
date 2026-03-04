@@ -8,7 +8,6 @@ import { Toaster } from "react-hot-toast";
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 const UI = () => {
-  const [noteList, setNoteList] = useState<Notes | null>(null);
   const [recent, setRecent] = useState<Notes[]>([]);
   const fetchRecent = async () => {
     try {
@@ -20,11 +19,12 @@ const UI = () => {
   };
 
   return (
-    <GlobalContext.Provider
-      value={{ noteList, setNoteList, fetchRecent, recent }}
-    >
+    <GlobalContext.Provider value={{ fetchRecent, recent }}>
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
-        <Toaster />
+        <Toaster
+          position="bottom-right"
+          containerStyle={{ bottom: 40, right: 40 }}
+        />
         <LeftBar />
         <Outlet />
       </div>

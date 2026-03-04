@@ -1,6 +1,6 @@
 import { AlertTriangle, Plus, Search } from "lucide-react";
 import logo from "../../../assets/logo.svg";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { useContext, useState } from "react";
 import { postNotes } from "../../../services/FolderApi";
 import { GlobalContext } from "../../UI";
@@ -11,6 +11,7 @@ import SearchInput from "./SearchInput";
 const Navbar = () => {
   const navigate = useNavigate();
   const { folder, folderId } = useParams();
+  const revalidator = useRevalidator();
   const globalContext = useContext(GlobalContext);
   if (!globalContext) {
     return null;
@@ -20,26 +21,8 @@ const Navbar = () => {
   const handleNewNote = async () => {
     try {
       const res = await postNotes({ folderId, title: "Untitled" });
-      if (globalContext) {
-        globalContext.setNoteList({
-          id: res.data.id,
-          folderId: folderId || "",
-          title: "Untitled",
-          preview: "",
-          isFavorite: false,
-          isArchived: false,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          deletedAt: "",
-          folder: {
-            id: folderId || "",
-            name: "",
-            createdAt: "",
-            updatedAt: "",
-            deletedAt: "",
-          },
-        });
-      }
+      revalidator.revalidate();
+
       fetchRecent();
       navigate(`/${folder}/${folderId}/notes/${res.data.id}`);
     } catch (err) {

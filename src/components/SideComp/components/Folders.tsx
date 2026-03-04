@@ -10,30 +10,46 @@ import { useEffect, useState } from "react";
 import { deleteFolder } from "../../../services/MoreApi";
 import FoldersLoader from "../../SkeletonsLoaders/FoldersLoader";
 import FolderItem from "./FolderItem";
-
+import toast from "react-hot-toast";
 const Folders = () => {
   const [folder, setFolder] = useState<FolderStruct[]>([]);
   const [load, setLoad] = useState(true);
   const location = useLocation();
   const nav = useNavigate();
 
-  const handleDelete = async (id: string) => {
-    await deleteFolder(id);
-    setFolder(folder.filter((item: FolderStruct) => item.id !== id));
+  const handleDeleteFolder = async (id: string) => {
+    try {
+      const res = await deleteFolder(id);
+      setFolder((prev) => {
+        const folderLeft = prev.filter((item) => item.id !== id);
 
-    if (location.pathname.includes(id)) {
-      nav(-1);
-    }
+        if (location.pathname.includes(id)) {
+          if (folderLeft.length > 0) {
+            const firstFold = folderLeft[0];
+            nav(`/${firstFold.name}/${firstFold.id}`);
+          } else {
+            //if no folder available
+            nav("/");
+          }
+        }
+
+        return folderLeft;
+      });
+      toast.success(res.data);
+    } catch (err) {}
   };
 
   const handleRename = async (id: string, name: string) => {
     try {
-      await renameFolder(id, name);
+      const res = await renameFolder(id, name);
       setFolder((val) =>
         val.map((item) => (item.id === id ? { ...item, name: name } : item)),
       );
-    } catch (error) {
-      console.log(error);
+      toast.success(res.data);
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err?.message);
+      }
     }
   };
 
@@ -42,8 +58,10 @@ const Folders = () => {
       const res = await postFolder({
         name: "Untitled",
       });
+      toast.success(res.data);
       await fetchFolder();
       nav(`/Untitled/${res.data.folder[0].id}`);
+      toast.success("Folder Created");
     } catch (err) {
       console.log(err);
     }
@@ -53,17 +71,11 @@ const Folders = () => {
     try {
       const res = await getFolders();
       setFolder(res.data.folders);
-      const { folders, folderName, categoryName } = res.data;
+      const { folders } = res.data;
       const firstFold = folders[0];
 
       //default navigation to first folder
-      if (
-        firstFold.name &&
-        firstFold.id &&
-        folderName &&
-        categoryName &&
-        location.pathname === "/"
-      ) {
+      if (firstFold?.id && location.pathname === "/") {
         nav(`/${firstFold.name}/${firstFold.id}`);
       }
     } catch (error) {
@@ -91,7 +103,7 @@ const Folders = () => {
           <FolderItem
             key={items.id}
             folder={items}
-            onDelete={handleDelete}
+            onDelete={handleDeleteFolder}
             rename={handleRename}
           />
         ))}

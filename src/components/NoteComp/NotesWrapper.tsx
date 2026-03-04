@@ -4,25 +4,14 @@ import { useContext, useEffect, useState } from "react";
 import type { Notes } from "../../types/type";
 import { GlobalContext } from "../UI";
 
-const Notes = () => {
+const NotesWrapper = () => {
   const loadNOte = useLoaderData<Notes[]>();
   console.log(loadNOte);
   const [notes, setNotes] = useState<Notes[]>(loadNOte);
-  const globalData = useContext(GlobalContext);
 
   useEffect(() => {
     setNotes(loadNOte);
   }, [loadNOte]);
-
-  useEffect(() => {
-    if (globalData?.noteList) {
-      setNotes((items) => {
-        if (items.some((n) => n.id === globalData.noteList!.id)) return items;
-        return [globalData.noteList!, ...items];
-      });
-      globalData.setNoteList(null);
-    }
-  }, [globalData?.noteList]);
 
   const updateNoteList = (id: string, updates: Partial<Notes>) => {
     setNotes((items) =>
@@ -37,4 +26,4 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default NotesWrapper;

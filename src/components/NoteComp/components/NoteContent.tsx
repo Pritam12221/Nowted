@@ -16,7 +16,7 @@ import {
   useRevalidator,
 } from "react-router-dom";
 import { format } from "date-fns";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import {
   changeArchive,
   changeFavorite,
@@ -28,7 +28,9 @@ import { AxiosError } from "axios";
 import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
 import type { NotesContextStruct } from "../../../types/type";
 import RestoreNotes from "./RestoreNotes";
+import { GlobalContext } from "../../UI";
 const NoteContent = () => {
+  const globalData = useContext(GlobalContext);
   const location = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
@@ -46,7 +48,6 @@ const NoteContent = () => {
   const trash = Boolean(note.deletedAt);
   const readOnly = note.deletedAt;
   const revalidator = useRevalidator();
-  const nav = useNavigate();
   //mount with this default values
   useEffect(() => {
     setTitle(note.title);
@@ -68,7 +69,11 @@ const NoteContent = () => {
       }
       debounceTimer.current = setTimeout(async () => {
         try {
-          await updateNote(note.id, data);
+          const res = await updateNote(note.id, data);
+          toast.success(res.data);
+          if (globalData?.fetchRecent) {
+            globalData.fetchRecent();
+          }
         } catch (err) {
           if (err instanceof Error) {
             toast.error(err.message, {
@@ -140,7 +145,7 @@ const NoteContent = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await deleteNote(note.id);
+      await deleteNote(note.id);
       toast.success("Note deleted", { icon: <Trash2 size={16} /> });
       setMore(false);
       revalidator.revalidate();

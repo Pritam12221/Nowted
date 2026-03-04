@@ -55,8 +55,6 @@ export type NotesContextStruct = {
 };
 
 export type GlobalContextType = {
-  noteList: Notes | null;
-  setNoteList: (note: Notes | null) => void;
   fetchRecent: () => Promise<void>;
   recent: Notes[];
 };

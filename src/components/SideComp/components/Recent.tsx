@@ -1,12 +1,9 @@
 import { FileText } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import type { fetchRecentType, Notes } from "../../../types/type";
-import { getRecentNotes } from "../../../services/NotesApi";
-import RecentSkeleton, {
-  RecentLoader,
-} from "../../SkeletonsLoaders/RecentLoader";
+import type {  Notes } from "../../../types/type";
 import { GlobalContext } from "../../UI";
+import RecentLoader from "../../SkeletonsLoaders/RecentLoader";
 
 const Recent = () => {
   const [loading, setLoading] = useState(false);
