@@ -4,7 +4,7 @@ import { fetchNotesByFolder } from "./FolderApi";
 import { fetchNotesContent } from "./NotesApi";
 import NoteContent from "../components/NoteComp/components/NoteContent";
 import NoNoteSelected from "../components/NoteComp/components/NoNoteSelected";
-import { getArchive, getDeleted, getFav } from "./MoreApi";
+import { fetchSearchLoader, getArchive, getDeleted, getFav } from "./MoreApi";
 import Notes from "../components/NoteComp/NotesWrapper";
 
 export const router = createBrowserRouter([
@@ -64,6 +64,22 @@ export const router = createBrowserRouter([
         path: "trash",
         element: <Notes />,
         loader: getDeleted,
+        children: [
+          {
+            index: true,
+            element: <NoNoteSelected />,
+          },
+          {
+            path: "notes/:noteId",
+            element: <NoteContent />,
+            loader: fetchNotesContent,
+          },
+        ],
+      },
+      {
+        path: "search",
+        element: <Notes />,
+        loader: fetchSearchLoader,
         children: [
           {
             index: true,

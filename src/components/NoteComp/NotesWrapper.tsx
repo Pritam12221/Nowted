@@ -1,8 +1,7 @@
 import { Outlet, useLoaderData } from "react-router-dom";
 import NoteList from "./components/NoteList";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Notes } from "../../types/type";
-import { GlobalContext } from "../UI";
 
 const NotesWrapper = () => {
   const loadNOte = useLoaderData<Notes[]>();

@@ -1,6 +1,11 @@
-import { AlertTriangle, Plus, Search } from "lucide-react";
+import { AlertTriangle, Plus, Search, X } from "lucide-react";
 import logo from "../../../assets/logo.svg";
-import { useNavigate, useParams, useRevalidator } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useRevalidator,
+  useSearchParams,
+} from "react-router-dom";
 import { useContext, useState } from "react";
 import { postNotes } from "../../../services/FolderApi";
 import { GlobalContext } from "../../UI";
@@ -13,6 +18,8 @@ const Navbar = () => {
   const { folder, folderId } = useParams();
   const revalidator = useRevalidator();
   const globalContext = useContext(GlobalContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   if (!globalContext) {
     return null;
   }
@@ -22,7 +29,6 @@ const Navbar = () => {
     try {
       const res = await postNotes({ folderId, title: "Untitled" });
       revalidator.revalidate();
-
       fetchRecent();
       navigate(`/${folder}/${folderId}/notes/${res.data.id}`);
     } catch (err) {
@@ -35,14 +41,32 @@ const Navbar = () => {
   };
 
   const [search, setSearch] = useState(false);
-  function handleSearch() {
-    setSearch(!search);
-  }
+
+  const handleSearchOpen = () => setSearch(true);
+
+  const handleSearchClose = () => {
+    setSearch(false);
+    setSearchParams({});
+    navigate(-1);
+  };
+
   return (
     <div className="h-1/6 px-10 w-full flex flex-col justify-between text-primary">
       <div className="flex justify-between items-center w-full">
         <img src={logo} alt="Noted" className="h-22 w-22" />
-        <Search size={18} className=" text-primary" onClick={handleSearch} />
+        {search ? (
+          <X
+            size={18}
+            className="text-primary cursor-pointer hover:text-white transition-colors"
+            onClick={handleSearchClose}
+          />
+        ) : (
+          <Search
+            size={18}
+            className="text-primary cursor-pointer hover:text-white transition-colors"
+            onClick={handleSearchOpen}
+          />
+        )}
       </div>
       <div className="flex w-full items-baseline ">
         {!search ? (

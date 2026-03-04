@@ -1,3 +1,4 @@
+import type { LoaderFunctionArgs } from "react-router-dom";
 import { api } from "./NotesApi";
 
 export const changeArchive = (id: string, isArchived: boolean) => {
@@ -45,4 +46,17 @@ export const updateNote = (
   data: Partial<{ title: string; content: string }>,
 ) => {
   return api.patch(`/notes/${id}`, data);
+};
+
+export const searchNotes = (data: string) => {
+  return api.get("/notes", { params: { search: data } });
+};
+
+export const fetchSearchLoader = async ({ request }: LoaderFunctionArgs) => {
+  console.log("inside search loader", request);
+  const url = new URL(request.url);
+  const data = url.searchParams.get("search") || "";
+  if (!data) return [];
+  const res = await searchNotes(data);
+  return res.data.notes ?? [];
 };

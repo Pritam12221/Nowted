@@ -13,20 +13,26 @@ const NoteList = ({ notes }: NoteListProps) => {
   const location = useLocation();
   const categoryName = location.pathname.split("/")[1].toUpperCase();
   const { folder, folderId } = useParams();
-  // const [searchParams] = useSearchParams();
-  // const search = searchParams.get("search");
   const currentBase = folderId || categoryName.toLowerCase();
   const checkFolderId =
     navigation.state === "loading" &&
     !navigation.location?.pathname.includes(currentBase);
+  const search = location.pathname.includes("/search");
   if (checkFolderId) {
     return <NoteListSkeleton />;
   }
   return (
-    <div className=" h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
-      <h2 className="text-white text-lg pb-2 font-bold w-120">
-        {folder ? folder : categoryName}
-      </h2>
+    <div className=" w-120 h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
+      <div className="flex items-center justify-between pb-2 w-full">
+        <h2 className="text-white text-lg font-bold truncate">
+          {search ? "Searching" : folder ? folder : categoryName}
+        </h2>
+        {search && (
+          <span className="text-zinc-400 text-sm shrink-0">
+            {notes?.length ?? 0} Notes
+          </span>
+        )}
+      </div>
       {notes?.map((items: Notes) => (
         <div key={items.id}>
           <NavLink
