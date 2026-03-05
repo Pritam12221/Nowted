@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { AlertTriangle, History } from "lucide-react";
+import { AlertTriangle, Folder, History } from "lucide-react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useRevalidator } from "react-router-dom";
 import { restoreNote } from "../../../services/MoreApi";
@@ -14,6 +14,8 @@ const RestoreNotes = ({ noteId, noteTitle }: RestoreProps) => {
       console.log("inside handleRestore", res);
       toast.success(res.data, { icon: <History size={16} /> });
       revalidator.revalidate();
+
+      console.log("inside restore");
       if (navigate.pathname.includes("/trash")) {
         nav("/trash");
       } else {
@@ -32,7 +34,9 @@ const RestoreNotes = ({ noteId, noteTitle }: RestoreProps) => {
       <div className="bg-zinc-800 p-6 rounded-2xl mb-2">
         <History />
       </div>
-      <h2 className="text-xl font-semibold">Restore"{noteTitle}"</h2>
+      <div className="w-75 flex justify-center">
+        <h2 className="text-xl font-semibold truncate">Restore"{noteTitle}"</h2>
+      </div>
       <p className="text-zinc-500 text-sm text-center w-1/2">
         Don't want to lose this note? It's not too late! Just click the
         'Restore' button and it will be added back to your list. It's that
@@ -40,7 +44,7 @@ const RestoreNotes = ({ noteId, noteTitle }: RestoreProps) => {
       </p>
       <button
         onClick={handleRestore}
-        className="rounded text-white bg-blue-700 hover:bg-blue-600 transition-colors px-5 py-3 cursor-pointer"
+        className="rounded text-white bg-blue-700 hover:bg-blue-600 transition-colors px-3 py-2 cursor-pointer"
       >
         Restore
       </button>

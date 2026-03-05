@@ -24,7 +24,9 @@ const UI = () => {
   };
 
   return (
-    <GlobalContext.Provider value={{ fetchRecent, recent, dropdownRefresh }}>
+    <GlobalContext.Provider
+      value={{ fetchRecent, recent, dropdownRefresh, dropdownFetch }}
+    >
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
         <Toaster
           position="bottom-right"

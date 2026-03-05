@@ -30,7 +30,7 @@ const FolderItem = ({ folder, onDelete, rename }: RenameProps) => {
         if (editId) e.preventDefault();
       }}
     >
-      <div className="flex px-10 gap-3 relative w-full items-center">
+      <div className="flex px-6 relative items-center w-full flex-row gap-4">
         <Folder />
         {editId ? (
           <form onSubmit={handleSave}>
@@ -44,7 +44,7 @@ const FolderItem = ({ folder, onDelete, rename }: RenameProps) => {
           </form>
         ) : (
           <h6
-            className="font-bold flex w-full cursor-pointer"
+            className="font-bold flex w-full cursor-pointer truncate"
             onDoubleClick={(e) => {
               e.preventDefault();
               setEditId(true);

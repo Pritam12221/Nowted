@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const More = () => {
   return (
+    //fav
     <div className="h-1/5  w-full pt-10">
       <h6 className="px-10">More</h6>
       <NavLink
@@ -13,11 +14,13 @@ const More = () => {
           }`
         }
       >
-        <div className="flex px-10 gap-3">
+        <div className="flex px-6 gap-3">
           <Star />
           Favorites
         </div>
       </NavLink>
+
+      {/* //trash */}
       <NavLink
         to="/trash"
         className={({ isActive }) =>
@@ -26,10 +29,12 @@ const More = () => {
           }`
         }
       >
-        <div className="flex px-10 gap-3">
+        <div className="flex px-6 gap-3">
           <Trash /> Trash
         </div>
       </NavLink>
+
+      {/* archived */}
       <NavLink
         to="/archived"
         className={({ isActive }) =>
@@ -38,7 +43,7 @@ const More = () => {
           }`
         }
       >
-        <div className="flex px-10 gap-3">
+        <div className="flex px-6 gap-3">
           <FolderArchive />
           Archived Notes
         </div>

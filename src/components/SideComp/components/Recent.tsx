@@ -1,7 +1,7 @@
 import { FileText } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import type {  Notes } from "../../../types/type";
+import type { Notes } from "../../../types/type";
 import { GlobalContext } from "../../UI";
 import RecentLoader from "../../SkeletonsLoaders/RecentLoader";
 
@@ -25,16 +25,22 @@ const Recent = () => {
   return (
     <div className="h-1/5  w-full  pt-5">
       <h6 className=" text-bold px-10">Recents</h6>
-      <div className="flex flex-col gap-2 ">
+      <div className="flex flex-col gap-2">
         {recent.map((items: Notes) => (
           <NavLink
             key={items.id}
             to={`/${items.folder?.name}/${items.folder?.id}/notes/${items.id}`}
-            className="w-full h-1/4 px-2 py-2 flex items-center gap-3 rounded transition-all hover:bg-zinc-700"
+            className={({ isActive }) =>
+              `w-full px-2 py-2 flex items-center gap-3 rounded transition-all  ${
+                isActive ? "bg-primary-button-hover" : "hover:bg-zinc-700"
+              }`
+            }
           >
-            <div className="flex px-10 gap-3">
-              <FileText />
-              <h6 className="self-center font-bold flex">{items.title}</h6>
+            <div className="flex px-6 gap-3 w-full">
+              <FileText size={20} />
+              <h6 className="self-center font-bold flex truncate">
+                {items.title}
+              </h6>
             </div>
           </NavLink>
         ))}

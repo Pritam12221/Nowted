@@ -22,7 +22,7 @@ const NoteList = ({ notes }: NoteListProps) => {
     return <NoteListSkeleton />;
   }
   return (
-    <div className=" w-120 h-screen bg-zinc-800 flex flex-col gap-3 pt-12 px-6 text-white overflow-y-auto scroll">
+    <div className=" w-120 h-screen bg-zinc-800 flex flex-col gap-3 pt-8 px-6 text-white overflow-y-auto scroll">
       <div className="flex items-center justify-between pb-2 w-full">
         <h2 className="text-white text-lg font-bold truncate">
           {search ? "Searching" : folder ? folder : categoryName}

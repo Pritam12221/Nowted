@@ -325,7 +325,7 @@ const NoteContent = () => {
         value={content}
         onChange={handleContentChange}
         readOnly={readOnly}
-        className="text-zinc-200 text-sm leading-7 bg-transparent outline-none border-none resize-none flex-1 w-full"
+        className="text-zinc-200 text-sm leading-7 bg-transparent outline-none border-none resize-none flex-1 w-full flex-wrap"
         placeholder="start from here"
       />
     </div>

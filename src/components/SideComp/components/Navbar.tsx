@@ -18,13 +18,16 @@ const Navbar = () => {
   const { folder, folderId } = useParams();
   const revalidator = useRevalidator();
   const globalContext = useContext(GlobalContext);
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  const [, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(false);
+  const handleSearchOpen = () => setSearch(true);
   if (!globalContext) {
     return null;
   }
 
   const { fetchRecent } = globalContext;
+
+  //handlers
   const handleNewNote = async () => {
     try {
       const res = await postNotes({ folderId, title: "Untitled" });
@@ -40,10 +43,6 @@ const Navbar = () => {
     }
   };
 
-  const [search, setSearch] = useState(false);
-
-  const handleSearchOpen = () => setSearch(true);
-
   const handleSearchClose = () => {
     setSearch(false);
     setSearchParams({});
@@ -51,7 +50,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="h-1/6 px-10 w-full flex flex-col justify-between text-primary">
+    <div className="h-1/6 px-6 w-full flex flex-col justify-between text-primary">
       <div className="flex justify-between items-center w-full">
         <img src={logo} alt="Noted" className="h-22 w-22" />
         {search ? (

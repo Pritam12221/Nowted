@@ -8,7 +8,7 @@ const FoldersLoader = () => {
       </div>
 
       {/* Fake folder rows */}
-      <div className="flex flex-col gap-2 max-h-[240px] pr-1">
+      <div className="flex flex-col gap-2 h-240px pr-1">
         <div className="sk-row">
           <div className="sk-icon" />
           <div className="sk-line w-28" />

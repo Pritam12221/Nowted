@@ -17,6 +17,7 @@ const Folders = () => {
   const location = useLocation();
   const nav = useNavigate();
 
+  //handlers
   const handleDeleteFolder = async (id: string) => {
     try {
       const res = await deleteFolder(id);
@@ -89,6 +90,7 @@ const Folders = () => {
     fetchFolder();
   }, []);
 
+  //skeleton component
   if (load) return <FoldersLoader />;
 
   return (
