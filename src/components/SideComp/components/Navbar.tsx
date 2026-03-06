@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useContext, useState } from "react";
-import { postNotes } from "../../../services/FolderApi";
+import { postNotes } from "../../../Api/FolderApi";
 import { GlobalContext } from "../../UI";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";

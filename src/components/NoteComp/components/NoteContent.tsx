@@ -18,18 +18,14 @@ import {
 } from "react-router-dom";
 import { format } from "date-fns";
 import { useState, useRef, useEffect, useCallback, useContext } from "react";
-import {
-  deleteNote,
-  toggleFavArch,
-  updateNote,
-} from "../../../services/MoreApi";
+import { deleteNote, toggleFavArch, updateNote } from "../../../Api/MoreApi";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
 import type { FolderStruct, NotesContextStruct } from "../../../types/type";
 import RestoreNotes from "./RestoreNotes";
 import { GlobalContext } from "../../UI";
-import { getFolders } from "../../../services/FolderApi";
+import { getFolders } from "../../../Api/FolderApi";
 import DeleteDialog from "../../DeleteDialog";
 const NoteContent = () => {
   const globalData = useContext(GlobalContext);

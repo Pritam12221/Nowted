@@ -3,7 +3,7 @@ import LeftBar from "./SideComp/LeftBar";
 import "../App.css";
 import type { GlobalContextType, Notes } from "../types/type";
 import { createContext, useState } from "react";
-import { getRecentNotes } from "../services/NotesApi";
+import { getRecentNotes } from "../Api/NotesApi";
 import { Toaster } from "react-hot-toast";
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);

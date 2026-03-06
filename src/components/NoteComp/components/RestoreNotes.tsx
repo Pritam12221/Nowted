@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { AlertTriangle, History } from "lucide-react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useRevalidator } from "react-router-dom";
-import { restoreNote } from "../../../services/MoreApi";
+import { restoreNote } from "../../../Api/MoreApi";
 import type { RestoreProps } from "../../../types/type";
 const RestoreNotes = ({ noteId, noteTitle }: RestoreProps) => {
   const revalidator = useRevalidator();

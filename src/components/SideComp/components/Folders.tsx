@@ -1,13 +1,9 @@
 import { FolderPlus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { FolderStruct } from "../../../types/type";
-import {
-  getFolders,
-  postFolder,
-  renameFolder,
-} from "../../../services/FolderApi";
+import { getFolders, postFolder, renameFolder } from "../../../Api/FolderApi";
 import { useEffect, useState } from "react";
-import { deleteFolder } from "../../../services/MoreApi";
+import { deleteFolder } from "../../../Api/MoreApi";
 import FoldersLoader from "../../SkeletonsLoaders/FoldersLoader";
 import FolderItem from "./FolderItem";
 import toast from "react-hot-toast";

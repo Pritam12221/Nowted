@@ -1,11 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
-import UI from "../components/UI";
-import { fetchNotesByFolder } from "./FolderApi";
-import { fetchNotesContent } from "./NotesApi";
-import NoteContent from "../components/NoteComp/components/NoteContent";
-import NoNoteSelected from "../components/NoteComp/components/NoNoteSelected";
-import { fetchSearchLoader, getArchive, getDeleted, getFav } from "./MoreApi";
-import Notes from "../components/NoteComp/NotesWrapper";
+import UI from "./components/UI";
+import NotesWrapper from "./components/NoteComp/NotesWrapper";
+import { fetchNotesByFolder } from "./Api/FolderApi";
+import NoNoteSelected from "./components/NoteComp/components/NoNoteSelected";
+import NoteContent from "./components/NoteComp/components/NoteContent";
+import { fetchNotesContent } from "./Api/NotesApi";
+import {./Api/MoreApi
+  fetchSearchLoader,
+  getArchive,
+  getDeleted,
+  getFav,
+} from "./services/MoreApi";
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +19,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ":folder/:folderId",
-        element: <Notes />,
+        element: <NotesWrapper />,
         loader: fetchNotesByFolder,
         children: [
           {
@@ -30,7 +35,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "favorites",
-        element: <Notes />,
+        element: <NotesWrapper />,
         loader: getFav,
         children: [
           {
@@ -46,7 +51,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "archived",
-        element: <Notes />,
+        element: <NotesWrapper />,
         loader: getArchive,
         children: [
           {
@@ -62,7 +67,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "trash",
-        element: <Notes />,
+        element: <NotesWrapper />,
         loader: getDeleted,
         children: [
           {
@@ -78,7 +83,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "search",
-        element: <Notes />,
+        element: <NotesWrapper />,
         loader: fetchSearchLoader,
         children: [
           {
