@@ -2,16 +2,15 @@ import type { LoaderFunctionArgs } from "react-router-dom";
 import { api } from "./NotesApi";
 import type { GetNotesType } from "../types/type";
 
-export const changeArchive = (id: string, isArchived: boolean) => {
-  return api.patch(`/notes/${id}`, { isArchived: !isArchived });
-};
-
-export const changeFavorite = (
+export const toggleFavArch = (
   id: string,
   isFavorite?: boolean,
   isArchived?: boolean,
 ) => {
-  return api.patch<string>(`/notes/${id}`, { isFavorite: !isFavorite });
+  return api.patch<string>(`/notes/${id}`, {
+    isFavorite: !isFavorite,
+    isArchived: !isArchived,
+  });
 };
 
 export const deleteNote = (id: string) => {
@@ -34,7 +33,6 @@ export const getArchive = async () => {
 
 export const getDeleted = async () => {
   const data = await api.get<GetNotesType>("notes?deleted=true");
-  console.log(data);
   return data.data.notes;
 };
 

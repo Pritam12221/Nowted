@@ -19,9 +19,8 @@ import {
 import { format } from "date-fns";
 import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import {
-  changeArchive,
-  changeFavorite,
   deleteNote,
+  toggleFavArch,
   updateNote,
 } from "../../../services/MoreApi";
 import toast from "react-hot-toast";
@@ -134,7 +133,7 @@ const NoteContent = () => {
 
   const handleArchive = async () => {
     try {
-      const res = await changeArchive(note.id, note.isArchived);
+      const res = await toggleFavArch(note.id, note.isArchived);
       toast.success(res.data, { icon: <Archive size={16} /> });
       setArchive(!archive);
       setMore(false);
@@ -152,7 +151,7 @@ const NoteContent = () => {
 
   const handleFavorite = async () => {
     try {
-      const res = await changeFavorite(note.id, note.isFavorite);
+      const res = await toggleFavArch(note.id, note.isFavorite);
       toast.success(res.data, { icon: <Star size={16} /> });
       setFav(!fav);
       setMore(false);

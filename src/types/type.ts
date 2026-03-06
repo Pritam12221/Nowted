@@ -1,11 +1,3 @@
-// export type unknown = {
-//   folderId: string;
-//   title: string;
-//   content: string;
-//   isFavorite: boolean;
-//   isArchived: boolean;
-// };
-
 export type MainStruct = {
   id: string;
   folderId: string | null;
