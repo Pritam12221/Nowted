@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { AlertTriangle, Folder, History } from "lucide-react";
+import { AlertTriangle, History } from "lucide-react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useRevalidator } from "react-router-dom";
 import { restoreNote } from "../../../services/MoreApi";
@@ -8,14 +8,14 @@ const RestoreNotes = ({ noteId, noteTitle }: RestoreProps) => {
   const revalidator = useRevalidator();
   const navigate = useLocation();
   const nav = useNavigate();
+
+  //handlers
   const handleRestore = async () => {
     try {
       const res = await restoreNote(noteId);
       console.log("inside handleRestore", res);
       toast.success(res.data, { icon: <History size={16} /> });
       revalidator.revalidate();
-
-      console.log("inside restore");
       if (navigate.pathname.includes("/trash")) {
         nav("/trash");
       } else {

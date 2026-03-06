@@ -11,7 +11,8 @@ const NotesWrapper = () => {
   useEffect(() => {
     setNotes(loadNOte);
   }, [loadNOte]);
-
+  
+//update notelist based on the note content component
   const updateNoteList = (id: string, updates: Partial<Notes>) => {
     setNotes((items) =>
       items.map((n) => (n.id === id ? { ...n, ...updates } : n)),

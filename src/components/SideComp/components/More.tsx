@@ -4,8 +4,8 @@ import { NavLink } from "react-router-dom";
 const More = () => {
   return (
     //fav
-    <div className="h-1/5  w-full pt-10">
-      <h6 className="px-10">More</h6>
+    <div className=" w-full">
+      <h6 className="px-6">More</h6>
       <NavLink
         to="/favorites"
         className={({ isActive }) =>

@@ -6,31 +6,59 @@
 //   isArchived: boolean;
 // };
 
-export type Notes = {
+export type MainStruct = {
   id: string;
-  folderId: string;
+  folderId: string | null;
   title: string;
+  content: string | null;
+  name: string;
   isFavorite: boolean;
   isArchived: boolean;
   createdAt: string;
   updatedAt: string;
-  deletedAt: string;
+  deletedAt: string | null;
   preview: string;
-  folder: {
-    id: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-  };
 };
 
-export type FolderStruct = {
+export type FolderStruct = Pick<
+  MainStruct,
+  "id" | "name" | "createdAt" | "updatedAt" | "deletedAt"
+>;
+
+export type Notes = Pick<
+  MainStruct,
+  | "id"
+  | "folderId"
+  | "title"
+  | "isFavorite"
+  | "isArchived"
+  | "createdAt"
+  | "updatedAt"
+  | "deletedAt"
+  | "preview"
+> & { folder: FolderStruct | null };
+
+export type NoteDetail = Pick<MainStruct, "content"> & Notes;
+
+// ---- API Response Types ----
+export type GetNotesType = {
+  notes: Notes[];
+};
+
+export type GetRecentType = {
+  recentNotes: Notes[];
+};
+
+export type GetNoteContentType = {
+  note: NoteDetail;
+};
+
+export type GetFoldersResponseType = {
+  folders: FolderStruct[];
+};
+
+export type CreateNoteResponse = {
   id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
 };
 
 export type RenameProps = {
@@ -59,11 +87,6 @@ export type GlobalContextType = {
   recent: Notes[];
   dropdownRefresh: () => void;
   dropdownFetch: boolean;
-};
-
-export type toggleThemeType = {
-  dark: boolean;
-  toggleTheme: () => void;
 };
 
 export type fetchRecentType = {

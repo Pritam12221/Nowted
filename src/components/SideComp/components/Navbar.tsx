@@ -24,9 +24,7 @@ const Navbar = () => {
   if (!globalContext) {
     return null;
   }
-
   const { fetchRecent } = globalContext;
-
   //handlers
   const handleNewNote = async () => {
     try {
@@ -46,11 +44,11 @@ const Navbar = () => {
   const handleSearchClose = () => {
     setSearch(false);
     setSearchParams({});
-    navigate(-1);
+    navigate("/");
   };
 
   return (
-    <div className="h-1/6 px-6 w-full flex flex-col justify-between text-primary">
+    <div className="px-6 w-full flex flex-col justify-between text-primary">
       <div className="flex justify-between items-center w-full">
         <img src={logo} alt="Noted" className="h-22 w-22" />
         {search ? (
@@ -67,7 +65,7 @@ const Navbar = () => {
           />
         )}
       </div>
-      <div className="flex w-full items-baseline ">
+      <div className="flex w-full ">
         {!search ? (
           <button
             className="flex bg-primary-button w-full text-mid justify-center items-center text-white px-5 py-2 rounded cursor-pointer"

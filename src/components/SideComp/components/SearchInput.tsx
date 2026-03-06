@@ -23,6 +23,7 @@ const SearchInput = () => {
 
   return (
     <input
+      autoFocus
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       placeholder="Search notes..."

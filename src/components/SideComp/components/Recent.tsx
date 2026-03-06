@@ -23,8 +23,8 @@ const Recent = () => {
   }, []);
   if (loading) return <RecentLoader />;
   return (
-    <div className="h-1/5  w-full  pt-5">
-      <h6 className=" text-bold px-10">Recents</h6>
+    <div className="w-full  pt-5">
+      <h6 className=" text-bold px-10 pb-2">Recents</h6>
       <div className="flex flex-col gap-2">
         {recent.map((items: Notes) => (
           <NavLink

@@ -38,7 +38,7 @@ const NoteList = ({ notes }: NoteListProps) => {
           <NavLink
             to={`notes/${items.id}`}
             className={({ isActive }) =>
-              ` w-fixed px-3 py-3 rounded-lg bg-primary-button flex flex-col gap-2 transition-all ease-in-out ${isActive ? "bg-primary-hover" : "bg-primary-button hover:bg-zinc-650"}`
+              ` w-fixed px-3 py-3  bg-primary-button flex flex-col gap-2 transition-all ease-in-out ${isActive ? "bg-primary-hover" : "bg-primary-button hover:bg-zinc-650"}`
             }
           >
             <Note value={items} />

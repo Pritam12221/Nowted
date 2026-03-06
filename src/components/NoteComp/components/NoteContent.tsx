@@ -31,6 +31,7 @@ import type { FolderStruct, NotesContextStruct } from "../../../types/type";
 import RestoreNotes from "./RestoreNotes";
 import { GlobalContext } from "../../UI";
 import { getFolders } from "../../../services/FolderApi";
+import DeleteDialog from "../../DeleteDialog";
 const NoteContent = () => {
   const globalData = useContext(GlobalContext);
   const location = useLocation();
@@ -52,6 +53,7 @@ const NoteContent = () => {
   const trash = Boolean(note.deletedAt);
   const readOnly = note.deletedAt;
   const revalidator = useRevalidator();
+  const [showDialog, setshowDialog] = useState(false);
 
   //mount with this default values
   useEffect(() => {
@@ -169,6 +171,7 @@ const NoteContent = () => {
       await deleteNote(note.id);
       toast.success("Note deleted", { icon: <Trash2 size={16} /> });
       setMore(false);
+      setshowDialog(false);
       revalidator.revalidate();
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -255,7 +258,8 @@ const NoteContent = () => {
 
                   <button
                     onClick={() => {
-                      handleDelete();
+                      setMore(false);
+                      setshowDialog(true);
                     }}
                     className={`w-full flex items-center gap-3 px-4 py-3  text-zinc-200  hover:text-red-400 ${archive ? "none" : "block"}`}
                   >
@@ -328,6 +332,13 @@ const NoteContent = () => {
         className="text-zinc-200 text-sm leading-7 bg-transparent outline-none border-none resize-none flex-1 w-full flex-wrap"
         placeholder="start from here"
       />
+      {showDialog && (
+        <DeleteDialog
+          onDelete={handleDelete}
+          onCancel={() => setshowDialog(false)}
+          id={note.id}
+        />
+      )}
     </div>
   );
 };
