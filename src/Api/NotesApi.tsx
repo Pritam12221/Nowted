@@ -17,8 +17,8 @@ export const getRecentNotes = () => {
   return api.get<GetRecentType>("/notes/recent");
 };
 
-export const getNotesbyFolder = (folderId: string) => {
-  return api.get<GetNotesType>(`notes`, { params: { folderId } });
+export const getNotesbyFolder = (folderId: string, page = 1, limit = 10) => {
+  return api.get<GetNotesType>(`notes`, { params: { folderId, page, limit } });
 };
 
 export const getNotesContent = (noteId: string) => {

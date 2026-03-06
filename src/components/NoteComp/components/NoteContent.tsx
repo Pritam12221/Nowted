@@ -50,7 +50,7 @@ const NoteContent = () => {
   const revalidator = useRevalidator();
   const [showDialog, setshowDialog] = useState(false);
 
-  //mount with this default values
+  //mount with this default values with note id change
   useEffect(() => {
     setTitle(note.title);
     setContent(note.content ?? "");
@@ -97,11 +97,12 @@ const NoteContent = () => {
     };
   }, []);
 
+  //Used for dropdown
   useEffect(() => {
     const loadFolders = async () => {
       try {
         const res = await getFolders();
-        const fetchedFolders = res.data?.folders || res.data || [];
+        const fetchedFolders = res.data?.folders;
         setfolder(Array.isArray(fetchedFolders) ? fetchedFolders : []);
       } catch (e) {
         console.error("Failed to load folders");

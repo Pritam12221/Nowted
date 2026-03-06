@@ -5,12 +5,12 @@ import { fetchNotesByFolder } from "./Api/FolderApi";
 import NoNoteSelected from "./components/NoteComp/components/NoNoteSelected";
 import NoteContent from "./components/NoteComp/components/NoteContent";
 import { fetchNotesContent } from "./Api/NotesApi";
-import {./Api/MoreApi
+import {
   fetchSearchLoader,
   getArchive,
   getDeleted,
   getFav,
-} from "./services/MoreApi";
+} from "./Api/MoreApi";
 
 export const router = createBrowserRouter([
   {
