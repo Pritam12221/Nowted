@@ -65,9 +65,14 @@ export type RestoreProps = {
   removeNote: (id: string) => void;
 };
 
+// ---- Prop drilling and Global Context types----
 export type NoteListProps = {
   notes: Notes[];
+  loadMore: () => void;
+  hasMore: boolean;
+  loadingState: boolean;
 };
+
 export type NotesContextStruct = {
   notes: Notes[];
   removeNote: (id: string) => void;

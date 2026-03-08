@@ -21,18 +21,36 @@ export const deleteFolder = (id: string) => {
   return api.delete<string>(`/folders/${id}`);
 };
 
+export const getFavNotes = (page = 1, limit = 10) => {
+  return api.get<GetNotesType>("/notes", {
+    params: { favorite: true, page, limit },
+  });
+};
+
 export const getFav = async () => {
-  const data = await api.get<GetNotesType>("/notes?favorite=true");
+  const data = await getFavNotes(1, 10);
   return data.data.notes;
+};
+
+export const getArchiveNotes = (page = 1, limit = 10) => {
+  return api.get<GetNotesType>("/notes", {
+    params: { archived: true, page, limit },
+  });
 };
 
 export const getArchive = async () => {
-  const data = await api.get<GetNotesType>("/notes?archived=true");
+  const data = await getArchiveNotes(1, 10);
   return data.data.notes;
 };
 
+export const getDeletedNotes = (page = 1, limit = 10) => {
+  return api.get<GetNotesType>("/notes", {
+    params: { deleted: true, page, limit },
+  });
+};
+
 export const getDeleted = async () => {
-  const data = await api.get<GetNotesType>("notes?deleted=true");
+  const data = await getDeletedNotes(1, 10);
   return data.data.notes;
 };
 
@@ -47,8 +65,10 @@ export const updateNote = (
   return api.patch<string>(`/notes/${id}`, data);
 };
 
-export const searchNotes = (data: string) => {
-  return api.get<GetNotesType>("/notes", { params: { search: data } });
+export const searchNotes = (data: string, page = 1, limit = 10) => {
+  return api.get<GetNotesType>("/notes", {
+    params: { search: data, page, limit },
+  });
 };
 
 export const fetchSearchLoader = async ({ request }: LoaderFunctionArgs) => {

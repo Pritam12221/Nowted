@@ -15,7 +15,7 @@ const DeleteDialog = ({
       className="fixed inset-0 z-10 flex  justify-center items-center  bg-black/50"
     >
       <div
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()} //stop propagation
         className="bg-zinc-800 text-secondary rounded px-10 py-10"
       >
         <p className="text-lg">Are you sure you want to delete this?</p>
