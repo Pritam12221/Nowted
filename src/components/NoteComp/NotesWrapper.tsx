@@ -5,7 +5,7 @@ import {
   useParams,
 } from "react-router-dom";
 import NoteList from "./components/NoteList";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Notes } from "../../types/type";
 import {
   getArchiveNotes,
@@ -24,6 +24,12 @@ const NotesWrapper = () => {
   const location = useLocation();
   const { folderId } = useParams();
 
+  useEffect(() => {
+    setNotes(loadNOte);
+    setPage(1);
+    setHasMore(true);
+  }, [loadNOte]);
+
   const loadMore = useCallback(async () => {
     if (loadingState || !hasMore) return;
 
@@ -32,6 +38,7 @@ const NotesWrapper = () => {
     let newNotes: Notes[] = [];
 
     try {
+      //load more notes based on the routes
       if (location.pathname.includes("/favorites")) {
         const res = await getFavNotes(nextPage, 10);
         newNotes = res.data.notes;
@@ -53,9 +60,9 @@ const NotesWrapper = () => {
 
       if (newNotes && newNotes.length > 0) {
         setNotes((prev) => {
-          const existingIds = new Set(prev.map((n) => n.id));
-          const uniqueNewNotes = newNotes.filter((n) => !existingIds.has(n.id));
-          return [...prev, ...uniqueNewNotes];
+          const hashSet = new Set(prev.map((n) => n.id));
+          const unqNOtes = newNotes.filter((n) => !hashSet.has(n.id));
+          return [...prev, ...unqNOtes];
         });
         setPage(nextPage);
         if (newNotes.length < 10) {
