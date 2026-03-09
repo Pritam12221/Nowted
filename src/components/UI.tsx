@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 const UI = () => {
+  //dropdown to be fixed
   const [recent, setRecent] = useState<Notes[]>([]);
   const [dropdownFetch, setdropdownFetch] = useState(false);
 

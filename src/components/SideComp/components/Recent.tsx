@@ -12,6 +12,7 @@ const Recent = () => {
     return;
   }
   const { fetchRecent, recent } = data;
+
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -21,6 +22,8 @@ const Recent = () => {
 
     fetch();
   }, []);
+
+  //skeleton loader
   if (loading) return <RecentLoader />;
   return (
     <div className="w-full  pt-5">

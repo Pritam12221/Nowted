@@ -16,6 +16,7 @@ const NoteList = ({
   hasMore,
   loadingState,
 }: NoteListProps) => {
+  //for  pagination target div
   const target = useRef<HTMLDivElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
   const navigation = useNavigation();
@@ -52,9 +53,9 @@ const NoteList = ({
   }
 
   return (
-    <div className=" w-120 h-screen bg-[#1C1C1C]  flex flex-col gap-3 pt-8 px-6 text-white overflow-y-auto scroll">
+    <div className=" w-120 h-screen bg-back  flex flex-col gap-3 pt-8 text-white overflow-y-auto scroll">
       <div className="flex items-center justify-between pb-2 w-full">
-        <h2 className="text-white text-lg font-bold truncate">
+        <h2 className="text-white text-lg font-bold truncate pl-3">
           {search ? "Searching" : folder ? folder : categoryName}
         </h2>
         {search && (
@@ -65,17 +66,17 @@ const NoteList = ({
       </div>
       <div
         ref={scroll}
-        className="flex-1 overflow-y-auto scroll flex flex-col gap-4 pb-32"
+        className="flex-1 overflow-y-auto scroll flex flex-col gap-4 pb-32 px-3"
       >
         {notes.length === 0 ? (
-          <h4>No more notes available</h4>
+          <h4 className="pl-3">No more notes available</h4>
         ) : (
           notes?.map((items: Notes) => (
             <div key={items.id}>
               <NavLink
                 to={`notes/${items.id}`}
                 className={({ isActive }) =>
-                  `block w-full p-4 rounded-md transition-all ease-in-out ${isActive ? "bg-primary-button-hover" : "bg-[#2A2A2A] hover:bg-white/10"}`
+                  `block w-full p-4 rounded-md transition-all ease-in-out ${isActive ? "bg-primary-button-hover" : "bg-card hover:bg-white/10"}`
                 }
               >
                 <Note value={items} />

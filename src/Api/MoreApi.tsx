@@ -77,6 +77,7 @@ export const searchNotes = (
   });
 };
 
+//loader function for search route
 export const fetchSearchLoader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const data = url.searchParams.get("search") || "";

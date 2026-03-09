@@ -33,6 +33,7 @@ export const getNotesContent = (noteId: string, signal?: AbortSignal) => {
   return api.get<GetNoteContentType>(`/notes/${noteId}`, { signal });
 };
 
+//loader function for notecomponent
 export const fetchNotesContent = async ({
   params,
   request,

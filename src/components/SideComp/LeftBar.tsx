@@ -11,6 +11,7 @@ const LeftBar = () => {
     return save ? save === "dark" : true;
   });
 
+  //window toggle theme
   useEffect(() => {
     localStorage.setItem("theme", dark ? "dark" : "light");
     if (dark) {

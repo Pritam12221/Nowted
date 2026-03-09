@@ -89,7 +89,6 @@ const Folders = () => {
     fetchFolder();
   }, []);
   useEffect(() => {
-    console.log("yha", location.pathname);
     if (firstFolder && location.pathname === "/") {
       nav(`/${firstFolder.name}/${firstFolder.id}`);
     }

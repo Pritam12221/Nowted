@@ -21,6 +21,7 @@ export const postNotes = (post: object) => {
   return api.post<CreateNoteResponse>("/notes", post);
 };
 
+//loader function for notelist
 export const fetchNotesByFolder = async ({
   params,
   request,
