@@ -192,6 +192,7 @@ const NoteContent = () => {
     }
   };
 
+  //skeleton
   if (isLoading) return <NoteContentSkeleton />;
   if (trash)
     return (

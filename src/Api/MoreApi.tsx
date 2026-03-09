@@ -43,7 +43,7 @@ export const getArchive = async () => {
   return data.data.notes;
 };
 
-export const getDeletedNotes = (page = 1, limit = 10) => {
+export const getDeletedNotes = (page: number, limit: number) => {
   return api.get<GetNotesType>("/notes", {
     params: { deleted: true, page, limit },
   });
@@ -65,9 +65,15 @@ export const updateNote = (
   return api.patch<string>(`/notes/${id}`, data);
 };
 
-export const searchNotes = (data: string, page = 1, limit = 10) => {
+export const searchNotes = (
+  data: string,
+  page?: number,
+  limit?: number,
+  signal?: AbortSignal,
+) => {
   return api.get<GetNotesType>("/notes", {
     params: { search: data, page, limit },
+    signal,
   });
 };
 
@@ -75,6 +81,6 @@ export const fetchSearchLoader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const data = url.searchParams.get("search") || "";
   if (!data) return [];
-  const res = await searchNotes(data);
+  const res = await searchNotes(data, 1, 10, request.signal);
   return res.data.notes ?? [];
 };

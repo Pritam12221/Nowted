@@ -34,7 +34,6 @@ const NoteList = ({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          console.log("Fetching next page...");
           loadMore();
         }
       },
@@ -68,23 +67,29 @@ const NoteList = ({
         ref={scroll}
         className="flex-1 overflow-y-auto scroll flex flex-col gap-4 pb-32"
       >
-        {notes?.map((items: Notes) => (
-          <div key={items.id}>
-            <NavLink
-              to={`notes/${items.id}`}
-              className={({ isActive }) =>
-                `block w-full p-4 rounded-md transition-all ease-in-out ${isActive ? "bg-white/10" : "bg-[#2A2A2A] hover:bg-white/10"}`
-              }
-            >
-              <Note value={items} />
-            </NavLink>
-          </div>
-        ))}
+        {notes.length === 0 ? (
+          <h4>No more notes available</h4>
+        ) : (
+          notes?.map((items: Notes) => (
+            <div key={items.id}>
+              <NavLink
+                to={`notes/${items.id}`}
+                className={({ isActive }) =>
+                  `block w-full p-4 rounded-md transition-all ease-in-out ${isActive ? "bg-primary-button-hover" : "bg-[#2A2A2A] hover:bg-white/10"}`
+                }
+              >
+                <Note value={items} />
+              </NavLink>
+            </div>
+          ))
+        )}
         {(hasMore || loadingState) && (
-          <div ref={target} className="py-4 flex justify-center ">
+          <div ref={target} className="py-4 flex justify-center">
             {loadingState ? (
               <Loader2 className="animate-spin text-zinc-400 " />
-            ) : null}
+            ) : (
+              "no more note available"
+            )}
           </div>
         )}
       </div>

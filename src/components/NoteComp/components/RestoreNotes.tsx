@@ -29,6 +29,7 @@ const RestoreNotes = ({ noteId, noteTitle }: RestoreProps) => {
       }
     }
   };
+
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center gap-4 text-white ">
       <div className="bg-zinc-800 p-6 rounded-2xl mb-2">

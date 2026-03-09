@@ -60,9 +60,9 @@ const NotesWrapper = () => {
 
       if (newNotes && newNotes.length > 0) {
         setNotes((prev) => {
-          const hashSet = new Set(prev.map((n) => n.id));
-          const unqNOtes = newNotes.filter((n) => !hashSet.has(n.id));
-          return [...prev, ...unqNOtes];
+          // const hashSet = new Set(prev.map((n) => n.id));
+          // const unqNOtes = newNotes.filter((n) => !hashSet.has(n.id));
+          return [...prev, ...newNotes];
         });
         setPage(nextPage);
         if (newNotes.length < 10) {

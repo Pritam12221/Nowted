@@ -17,20 +17,34 @@ export const getRecentNotes = () => {
   return api.get<GetRecentType>("/notes/recent");
 };
 
-export const getNotesbyFolder = (folderId: string, page = 1, limit = 10) => {
-  return api.get<GetNotesType>(`notes`, { params: { folderId, page, limit } });
+export const getNotesbyFolder = (
+  folderId: string,
+  page: number,
+  limit: number,
+  signal?: AbortSignal,
+) => {
+  return api.get<GetNotesType>(`notes`, {
+    params: { folderId, page, limit },
+    signal,
+  });
 };
 
-export const getNotesContent = (noteId: string) => {
-  return api.get<GetNoteContentType>(`/notes/${noteId}`);
+export const getNotesContent = (noteId: string, signal?: AbortSignal) => {
+  return api.get<GetNoteContentType>(`/notes/${noteId}`, { signal });
 };
 
-export const fetchNotesContent = async ({ params }: LoaderFunctionArgs) => {
+export const fetchNotesContent = async ({
+  params,
+  request,
+}: LoaderFunctionArgs) => {
   const { noteId } = params;
   if (!noteId) {
     throw new Error("note id not exist");
   }
-
-  const res = await getNotesContent(noteId);
-  return res.data.note;
+  try {
+    const res = await getNotesContent(noteId, request.signal);
+    return res.data.note;
+  } catch (err) {
+    throw new Error();
+  }
 };
