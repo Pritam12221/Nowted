@@ -22,17 +22,20 @@ import { deleteNote, toggleFavArch, updateNote } from "../../../Api/MoreApi";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import NoteContentSkeleton from "../../SkeletonsLoaders/NoteContentLoader";
-import type { FolderStruct, NotesContextStruct } from "../../../types/type";
+import {
+  type FolderStruct,
+  type NotesContextStruct,
+} from "../../../types/type";
 import RestoreNotes from "./RestoreNotes";
 import { GlobalContext } from "../../UI";
 import { getFolders } from "../../../Api/FolderApi";
 import DeleteDialog from "../../DeleteDialog";
 const NoteContent = () => {
+  const note = useLoaderData();
   const globalData = useContext(GlobalContext);
   const location = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
-  const note = useLoaderData();
   const { removeNote, updateNoteList } = useOutletContext<NotesContextStruct>();
   const newDate = format(new Date(note.createdAt), "dd/MM/yyyy");
   const [more, setMore] = useState(false);
@@ -46,7 +49,10 @@ const NoteContent = () => {
   const [dropdown, setdropdown] = useState(false);
   const [folder, setfolder] = useState<FolderStruct[]>([]);
   const trash = Boolean(note.deletedAt);
-  const readOnly = note.deletedAt;
+  const checkFavArc =
+    location.pathname.includes("/favorites") ||
+    location.pathname.includes("/archive");
+  const readOnly = checkFavArc;
   const revalidator = useRevalidator();
   const [showDialog, setshowDialog] = useState(false);
 
@@ -56,12 +62,6 @@ const NoteContent = () => {
     setContent(note.content ?? "");
     setFav(note.isFavorite);
     setArchive(note.isArchived);
-  }, [note.id]);
-
-  useEffect(() => {
-    if (note.title === "Untitled" && titleFocus.current) {
-      titleFocus.current.focus();
-    }
   }, [note.id]);
 
   const debouncedSave = useCallback(
@@ -132,8 +132,8 @@ const NoteContent = () => {
     try {
       const res = await toggleFavArch({
         id: note.id,
-        isFavorite: note.isFavourite,
-        isArchived: !note.isArchived,
+        isFavorite: fav,
+        isArchived: !archive,
       });
       toast.success(res.data, { icon: <Archive size={16} /> });
       setArchive(!archive);
@@ -154,13 +154,15 @@ const NoteContent = () => {
     try {
       const res = await toggleFavArch({
         id: note.id,
-        isFavorite: !note.isFavorite,
-        isArchived: note.isArchived,
+        isFavorite: !fav,
+        isArchived: archive,
       });
       toast.success(res.data, { icon: <Star size={16} /> });
       setFav(!fav);
       setMore(false);
       revalidator.revalidate();
+      const checkPath = location.pathname.split("/notes")[0];
+      rollBack(checkPath === "" ? "/" : checkPath);
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message, {
@@ -202,6 +204,7 @@ const NoteContent = () => {
 
   //skeleton
   if (isLoading) return <NoteContentSkeleton />;
+
   if (trash)
     return (
       <RestoreNotes
@@ -215,6 +218,7 @@ const NoteContent = () => {
     <div className="w-full overflow-hidden px-10 py-10 text-white h-screen flex flex-col">
       <div className="flex justify-between items-start mb-8">
         <input
+          autoFocus
           ref={titleFocus}
           type="text"
           value={title}
