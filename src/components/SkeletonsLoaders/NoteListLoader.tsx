@@ -1,6 +1,6 @@
 const NoteListSkeleton = () => {
   return (
-    <div className="w-100 shrink-0 h-screen bg-[#1C1C1C] flex flex-col gap-3 pt-12 px-6 text-white sk-pulse">
+    <div className="w-100 shrink-0 h-screen bg-back  flex flex-col gap-3 pt-12 px-6 text-white sk-pulse">
       {/* Folder title */}
       <div className="sk-block h-6 w-32 rounded mb-2" />
 
