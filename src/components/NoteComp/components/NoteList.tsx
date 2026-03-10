@@ -72,20 +72,19 @@ const NoteList = ({
           <h4 className="pl-3">No more notes available</h4>
         ) : (
           notes?.map((items: Notes) => (
-            <div key={items.id}>
-              <NavLink
-                to={`notes/${items.id}`}
-                className={({ isActive }) =>
-                  `block w-full p-4 rounded-md transition-all ease-in-out ${isActive ? "bg-primary-button-hover" : "bg-card hover:bg-white/10"}`
-                }
-              >
-                <Note value={items} />
-              </NavLink>
-            </div>
+            <NavLink
+              key={items.id}
+              to={`notes/${items.id}`}
+              className={({ isActive }) =>
+                `block w-full p-4 rounded-md transition-all ease-in-out ${isActive ? "bg-primary-button-hover" : "bg-card hover:bg-white/10"}`
+              }
+            >
+              <Note value={items} />
+            </NavLink>
           ))
         )}
         {hasMore && notes.length > 0 && (
-          <div ref={target} className="py-4 flex justify-center bg-amber-500">
+          <div ref={target} className="py-4 flex justify-center ">
             {loadingState ? (
               <Loader2 className="animate-spin text-zinc-400 " />
             ) : (
