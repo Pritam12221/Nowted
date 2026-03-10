@@ -17,6 +17,7 @@ const NoteList = ({
   loadingState,
 }: NoteListProps) => {
   //for  pagination target div
+  //added a comment to check feature/bugfix
   const target = useRef<HTMLDivElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
   const navigation = useNavigation();
