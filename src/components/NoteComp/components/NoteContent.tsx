@@ -130,7 +130,11 @@ const NoteContent = () => {
 
   const handleArchive = async () => {
     try {
-      const res = await toggleFavArch(note.id, note.isArchived);
+      const res = await toggleFavArch({
+        id: note.id,
+        isFavorite: note.isFavourite,
+        isArchived: !note.isArchived,
+      });
       toast.success(res.data, { icon: <Archive size={16} /> });
       setArchive(!archive);
       setMore(false);
@@ -148,7 +152,11 @@ const NoteContent = () => {
 
   const handleFavorite = async () => {
     try {
-      const res = await toggleFavArch(note.id, note.isFavorite);
+      const res = await toggleFavArch({
+        id: note.id,
+        isFavorite: !note.isFavorite,
+        isArchived: note.isArchived,
+      });
       toast.success(res.data, { icon: <Star size={16} /> });
       setFav(!fav);
       setMore(false);
@@ -226,11 +234,6 @@ const NoteContent = () => {
 
           {more && (
             <>
-              <div //overlay
-                className="fixed inset-0 z-10"
-                onClick={() => setMore(false)}
-              />
-
               <div className="flex flex-col items-center justify-center  absolute right-0 mt-2 w-52 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl z-20 overflow-hidden  text-lg">
                 <>
                   <button

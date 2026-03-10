@@ -27,7 +27,7 @@ const FolderItem = ({ folder, onDelete, rename }: RenameProps) => {
   return (
     <>
       <NavLink
-        to={`/${folder.name}/${folder.id}`}
+        to={`/${encodeURIComponent(folder.name)}/${folder.id}`}
         className={({ isActive }) =>
           `w-full px-2 py-2 flex items-center gap-3 rounded transition-all  ${
             isActive ? "bg-primary-button-hover" : "hover:bg-zinc-700"
@@ -63,8 +63,9 @@ const FolderItem = ({ folder, onDelete, rename }: RenameProps) => {
 
           <Trash2
             className="absolute right-2 hover:text-red-400 transition-all cursor-pointer"
-            onClick={() => {
+            onClick={(e) => {
               setCheckDelete(!checkDelete);
+              e.stopPropagation();
             }}
           />
         </div>

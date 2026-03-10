@@ -2,14 +2,18 @@ import type { LoaderFunctionArgs } from "react-router-dom";
 import { api } from "./NotesApi";
 import type { GetNotesType } from "../types/type";
 
-export const toggleFavArch = (
-  id: string,
-  isFavorite?: boolean,
-  isArchived?: boolean,
-) => {
+export const toggleFavArch = ({
+  id,
+  isFavorite,
+  isArchived,
+}: {
+  id: string;
+  isFavorite: boolean;
+  isArchived: boolean;
+}) => {
   return api.patch<string>(`/notes/${id}`, {
-    isFavorite: !isFavorite,
-    isArchived: !isArchived,
+    isFavorite: isFavorite,
+    isArchived: isArchived,
   });
 };
 

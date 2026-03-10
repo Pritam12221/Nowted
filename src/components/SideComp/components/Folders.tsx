@@ -24,7 +24,7 @@ const Folders = () => {
         if (location.pathname.includes(id)) {
           if (folderLeft.length > 0) {
             const firstFold = folderLeft[0];
-            nav(`/${firstFold.name}/${firstFold.id}`);
+            nav(encodeURI(`/${firstFold.name}/${firstFold.id}`));
           } else {
             //if no folder available
             nav("/");

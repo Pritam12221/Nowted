@@ -22,14 +22,11 @@ export const postNotes = (post: object) => {
 };
 
 //loader function for notelist
-export const fetchNotesByFolder = async ({
-  params,
-  request,
-}: LoaderFunctionArgs) => {
+export const fetchNotesByFolder = async ({ params }: LoaderFunctionArgs) => {
   const { folderId } = params;
   if (!folderId) {
     throw new Error("id doesn't exist");
   }
-  const res = await getNotesbyFolder(folderId, 1, 10, request.signal);
+  const res = await getNotesbyFolder(folderId, 1, 10);
   return res.data.notes;
 };

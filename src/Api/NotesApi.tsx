@@ -21,29 +21,24 @@ export const getNotesbyFolder = (
   folderId: string,
   page: number,
   limit: number,
-  signal?: AbortSignal,
 ) => {
   return api.get(`notes`, {
     params: { folderId, page, limit },
-    signal,
   });
 };
 
-export const getNotesContent = (noteId: string, signal?: AbortSignal) => {
-  return api.get<GetNoteContentType>(`/notes/${noteId}`, { signal });
+export const getNotesContent = (noteId: string) => {
+  return api.get<GetNoteContentType>(`/notes/${noteId}`);
 };
 
 //loader function for notecomponent
-export const fetchNotesContent = async ({
-  params,
-  request,
-}: LoaderFunctionArgs) => {
+export const fetchNotesContent = async ({ params }: LoaderFunctionArgs) => {
   const { noteId } = params;
   if (!noteId) {
     throw new Error("note id not exist");
   }
   try {
-    const res = await getNotesContent(noteId, request.signal);
+    const res = await getNotesContent(noteId);
     return res.data.note;
   } catch (err) {
     throw new Error();
