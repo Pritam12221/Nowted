@@ -88,11 +88,13 @@ const Folders = () => {
   useEffect(() => {
     fetchFolder();
   }, []);
+
   useEffect(() => {
     if (firstFolder && location.pathname === "/") {
       nav(`/${firstFolder.name}/${firstFolder.id}`);
     }
   }, [location]);
+
   //skeleton component
   if (load) return <FoldersLoader />;
 

@@ -23,7 +23,8 @@ export const getNotesbyFolder = (
   limit: number,
   signal?: AbortSignal,
 ) => {
-  return api.get<GetNotesType>(`notes`, {
+  console.log("called notelist");
+  return api.get(`notes`, {
     params: { folderId, page, limit },
     signal,
   });

@@ -15,6 +15,7 @@ const UI = () => {
   const dropdownRefresh = () => {
     setdropdownFetch((prev) => !prev);
   };
+
   const fetchRecent = async () => {
     try {
       const res = await getRecentNotes();
@@ -25,6 +26,7 @@ const UI = () => {
   };
 
   return (
+    //global data to refetch recent component and dropdown(with in noteContent)
     <GlobalContext.Provider
       value={{ fetchRecent, recent, dropdownRefresh, dropdownFetch }}
     >

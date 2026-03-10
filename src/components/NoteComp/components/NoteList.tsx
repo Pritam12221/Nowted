@@ -30,8 +30,7 @@ const NoteList = ({
   const search = location.pathname.includes("/search");
 
   useEffect(() => {
-    if (!hasMore || loadingState || !target.current || !loadMore) return;
-
+    if (!hasMore || !target.current || !loadMore) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -46,7 +45,7 @@ const NoteList = ({
     return () => {
       observer.disconnect();
     };
-  }, [hasMore, loadingState, loadMore]);
+  }, [hasMore, loadMore]);
 
   if (checkFolderId) {
     return <NoteListSkeleton />;
@@ -84,8 +83,8 @@ const NoteList = ({
             </div>
           ))
         )}
-        {(hasMore || loadingState) && (
-          <div ref={target} className="py-4 flex justify-center">
+        {hasMore && notes.length > 0 && (
+          <div ref={target} className="py-4 flex justify-center bg-amber-500">
             {loadingState ? (
               <Loader2 className="animate-spin text-zinc-400 " />
             ) : (

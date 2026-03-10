@@ -21,6 +21,9 @@ export const router = createBrowserRouter([
         path: ":folder/:folderId",
         element: <NotesWrapper />,
         loader: fetchNotesByFolder,
+        shouldRevalidate: ({ currentParams, nextParams }) => {
+          return currentParams.folderId !== nextParams.folderId;
+        },
         children: [
           {
             index: true,
@@ -30,6 +33,9 @@ export const router = createBrowserRouter([
             path: "notes/:noteId",
             element: <NoteContent />,
             loader: fetchNotesContent,
+            shouldRevalidate: ({ currentParams, nextParams }) => {
+              return currentParams.noteId !== nextParams.noteId;
+            },
           },
         ],
       },

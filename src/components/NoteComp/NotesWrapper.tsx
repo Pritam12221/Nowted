@@ -17,9 +17,10 @@ import { getNotesbyFolder } from "../../Api/NotesApi";
 
 const NotesWrapper = () => {
   const loadNOte = useLoaderData<Notes[]>();
+  // const { total } = loadNOte;
   const [notes, setNotes] = useState<Notes[]>(loadNOte);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [loadingState, setloadingState] = useState(false);
   const location = useLocation();
   const { folderId } = useParams();
@@ -31,8 +32,7 @@ const NotesWrapper = () => {
   }, [loadNOte]);
 
   const loadMore = useCallback(async () => {
-    if (loadingState || !hasMore) return;
-
+    if (!hasMore || notes.length < 10) return;
     setloadingState(true);
     const nextPage = page + 1;
     let newNotes: Notes[] = [];
@@ -64,10 +64,7 @@ const NotesWrapper = () => {
           // const unqNOtes = newNotes.filter((n) => !hashSet.has(n.id));
           return [...prev, ...newNotes];
         });
-        setPage(nextPage);
-        if (newNotes.length < 10) {
-          setHasMore(false); //no notes left
-        }
+        setPage(nextPage); //no notes left
       } else {
         setHasMore(false);
       }
@@ -76,14 +73,7 @@ const NotesWrapper = () => {
     } finally {
       setloadingState(false);
     }
-  }, [
-    loadingState,
-    hasMore,
-    page,
-    location.pathname,
-    location.search,
-    folderId,
-  ]);
+  }, [hasMore, page, location.pathname, location.search, folderId]);
 
   //update notelist based on the note content component
   const updateNoteList = (id: string, updates: Partial<Notes>) => {

@@ -65,15 +65,9 @@ export const updateNote = (
   return api.patch<string>(`/notes/${id}`, data);
 };
 
-export const searchNotes = (
-  data: string,
-  page?: number,
-  limit?: number,
-  signal?: AbortSignal,
-) => {
+export const searchNotes = (data: string, page?: number, limit?: number) => {
   return api.get<GetNotesType>("/notes", {
     params: { search: data, page, limit },
-    signal,
   });
 };
 
@@ -82,6 +76,6 @@ export const fetchSearchLoader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const data = url.searchParams.get("search") || "";
   if (!data) return [];
-  const res = await searchNotes(data, 1, 10, request.signal);
+  const res = await searchNotes(data, 1, 10);
   return res.data.notes ?? [];
 };
