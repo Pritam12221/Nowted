@@ -6,15 +6,19 @@ import { createContext, useState } from "react";
 import { getRecentNotes } from "../Api/NotesApi";
 import { Toaster } from "react-hot-toast";
 
-export const GlobalContext = createContext<GlobalContextType | null>(null);
+export const GlobalContext = createContext<GlobalContextType>({
+  fetchRecent: () => {},
+  recent: [],
+});
 const UI = () => {
   //dropdown to be fixed
   const [recent, setRecent] = useState<Notes[]>([]);
-  const [dropdownFetch, setdropdownFetch] = useState(false);
 
-  const dropdownRefresh = () => {
-    setdropdownFetch((prev) => !prev);
-  };
+  // const [dropdownFetch, setdropdownFetch] = useState(false);
+
+  // const dropdownRefresh = () => {
+  //   setdropdownFetch((prev) => !prev);
+  // };
 
   const fetchRecent = async () => {
     try {
@@ -27,9 +31,7 @@ const UI = () => {
 
   return (
     //global data to refetch recent component and dropdown(with in noteContent)
-    <GlobalContext.Provider
-      value={{ fetchRecent, recent, dropdownRefresh, dropdownFetch }}
-    >
+    <GlobalContext.Provider value={{ fetchRecent, recent }}>
       <div className="flex bg-neutral-900 h-screen w-full text-primary">
         <Toaster
           position="bottom-right"

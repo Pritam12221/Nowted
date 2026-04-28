@@ -8,6 +8,7 @@ const FolderItem = ({ folder, onDelete, rename }: RenameProps) => {
   const [editId, setEditId] = useState(false);
   const [name, setName] = useState(folder.name);
   const [checkDelete, setCheckDelete] = useState(false);
+
   //handler
   const handleSave = () => {
     if (!name.trim()) {
@@ -66,6 +67,7 @@ const FolderItem = ({ folder, onDelete, rename }: RenameProps) => {
             onClick={(e) => {
               setCheckDelete(!checkDelete);
               e.stopPropagation();
+              e.preventDefault();
             }}
           />
         </div>

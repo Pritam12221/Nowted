@@ -19,7 +19,7 @@ const SearchInput = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, navigate, searchParams, setSearchParams]);
 
   return (
     <input

@@ -28,7 +28,6 @@ import {
 } from "../../../types/type";
 import RestoreNotes from "./RestoreNotes";
 import { GlobalContext } from "../../UI";
-import { getFolders } from "../../../Api/FolderApi";
 import DeleteDialog from "../../DeleteDialog";
 const NoteContent = () => {
   const note = useLoaderData();
@@ -47,22 +46,23 @@ const NoteContent = () => {
   const titleFocus = useRef<HTMLInputElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [dropdown, setdropdown] = useState(false);
-  const [folder, setfolder] = useState<FolderStruct[]>([]);
+  const [folder] = useState<FolderStruct[]>([]);
   const trash = Boolean(note.deletedAt);
-  const checkFavArc =
-    location.pathname.includes("/favorites") ||
-    location.pathname.includes("/archive");
-  const readOnly = checkFavArc;
+  const readOnly = note.deletedAt;
   const revalidator = useRevalidator();
   const [showDialog, setshowDialog] = useState(false);
 
   //mount with this default values with note id change
-  useEffect(() => {
+  const refresh = useCallback(() => {
     setTitle(note.title);
     setContent(note.content ?? "");
     setFav(note.isFavorite);
     setArchive(note.isArchived);
-  }, [note.id]);
+  }, [note.content, note.isArchived, note.isFavorite, note.title]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   const debouncedSave = useCallback(
     (data: { title?: string; content?: string }) => {
@@ -85,7 +85,7 @@ const NoteContent = () => {
         }
       }, 500);
     },
-    [note.id],
+    [note.id, globalData],
   );
 
   useEffect(() => {
@@ -98,20 +98,20 @@ const NoteContent = () => {
   }, []);
 
   //Used for dropdown
-  useEffect(() => {
-    const loadFolders = async () => {
-      try {
-        const res = await getFolders();
-        const fetchedFolders = res.data?.folders;
-        setfolder(Array.isArray(fetchedFolders) ? fetchedFolders : []);
-      } catch (e) {
-        console.error("Failed to load folders");
-      }
-    };
-    if (!readOnly) {
-      loadFolders();
-    }
-  }, [note.id, readOnly, globalData?.dropdownRefresh]);
+  // useEffect(() => {
+  //   const loadFolders = async () => {
+  //     try {
+  //       const res = await getFolders();
+  //       const fetchedFolders = res.data?.folders;
+  //       setfolder(Array.isArray(fetchedFolders) ? fetchedFolders : []);
+  //     } catch (e) {
+  //       console.error("Failed to load folders", e);
+  //     }
+  //   };
+  //   if (!readOnly) {
+  //     loadFolders();
+  //   }
+  // }, [note.id, readOnly, globalData?.dropdownRefresh]);
 
   //handlers
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +151,7 @@ const NoteContent = () => {
   };
 
   const handleFavorite = async () => {
+    console.log("fav called");
     try {
       const res = await toggleFavArch({
         id: note.id,
@@ -161,8 +162,10 @@ const NoteContent = () => {
       setFav(!fav);
       setMore(false);
       revalidator.revalidate();
-      const checkPath = location.pathname.split("/notes")[0];
-      rollBack(checkPath === "" ? "/" : checkPath);
+      if (location.pathname.includes("/favorites")) {
+        const checkPath = location.pathname.split("/notes")[0];
+        rollBack(checkPath === "" ? "/" : checkPath);
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message, {
@@ -198,7 +201,7 @@ const NoteContent = () => {
         rollBack(`/${folderId.name}/${targetFolder}/notes/${note.id}`);
       }
     } catch (err) {
-      toast.error("Failed to move note");
+      console.log(err);
     }
   };
 

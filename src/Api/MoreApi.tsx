@@ -11,6 +11,7 @@ export const toggleFavArch = ({
   isFavorite: boolean;
   isArchived: boolean;
 }) => {
+  console.log("toggle called");
   return api.patch<string>(`/notes/${id}`, {
     isFavorite: isFavorite,
     isArchived: isArchived,

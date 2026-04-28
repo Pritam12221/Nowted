@@ -26,7 +26,12 @@ const DeleteDialog = ({
           >
             Cancel
           </button>
-          <button className=" text-white rounded bg-red-500 hover:bg-red-800 transition-colors px-3 py-3 cursor-pointer w-20 flex justify-center items-center">
+          <button
+            className=" text-white rounded bg-red-500 hover:bg-red-800 transition-colors px-3 py-3 cursor-pointer w-20 flex justify-center items-center"
+            onClick={() => {
+              onDelete(id);
+            }}
+          >
             <Trash2
               onClick={() => {
                 onDelete(id);

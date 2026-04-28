@@ -2,7 +2,7 @@ import { FolderPlus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { FolderStruct } from "../../../types/type";
 import { getFolders, postFolder, renameFolder } from "../../../Api/FolderApi";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { deleteFolder } from "../../../Api/MoreApi";
 import FoldersLoader from "../../SkeletonsLoaders/FoldersLoader";
 import FolderItem from "./FolderItem";
@@ -13,9 +13,10 @@ const Folders = () => {
   const [load, setLoad] = useState(true);
   const location = useLocation();
   const nav = useNavigate();
-
+  console.log("current pathname", location.pathname);
   //handlers
   const handleDeleteFolder = async (id: string) => {
+    console.log("delete caled");
     try {
       const res = await deleteFolder(id);
       setFolder((prev) => {
@@ -34,7 +35,9 @@ const Folders = () => {
         return folderLeft;
       });
       toast.success(res.data);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleRename = async (id: string, name: string) => {
@@ -67,7 +70,7 @@ const Folders = () => {
 
   const [firstFolder, setFirstFolder] = useState<FolderStruct>();
 
-  const fetchFolder = async () => {
+  const fetchFolder = useCallback(async () => {
     try {
       const res = await getFolders();
       setFolder(res.data.folders);
@@ -83,17 +86,17 @@ const Folders = () => {
     } finally {
       setLoad(false);
     }
-  };
+  }, [location.pathname, nav]);
 
   useEffect(() => {
     fetchFolder();
-  }, []);
+  }, [fetchFolder]);
 
   useEffect(() => {
     if (firstFolder && location.pathname === "/") {
       nav(`/${firstFolder.name}/${firstFolder.id}`);
     }
-  }, [location]);
+  }, [location, firstFolder, nav]); //firstfolder ,nav
 
   //skeleton component
   if (load) return <FoldersLoader />;

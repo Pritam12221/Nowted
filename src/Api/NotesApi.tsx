@@ -40,7 +40,7 @@ export const fetchNotesContent = async ({ params }: LoaderFunctionArgs) => {
   try {
     const res = await getNotesContent(noteId);
     return res.data.note;
-  } catch (err) {
-    throw new Error();
+  } catch (error) {
+    console.log(error);
   }
 };

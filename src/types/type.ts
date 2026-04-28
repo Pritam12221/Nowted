@@ -80,10 +80,8 @@ export type NotesContextStruct = {
 };
 
 export type GlobalContextType = {
-  fetchRecent: () => Promise<void>;
+  fetchRecent: () => void;
   recent: Notes[];
-  dropdownRefresh: () => void;
-  dropdownFetch: boolean;
 };
 
 export type fetchRecentType = {

@@ -71,7 +71,14 @@ const NotesWrapper = () => {
     } finally {
       setloadingState(false);
     }
-  }, [hasMore, page, location.pathname, location.search, folderId]);
+  }, [
+    hasMore,
+    page,
+    location.pathname,
+    location.search,
+    folderId,
+    notes.length,
+  ]);
 
   //update notelist based on the note content component
   const updateNoteList = (id: string, updates: Partial<Notes>) => {

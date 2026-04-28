@@ -23,6 +23,7 @@ export const postNotes = (post: object) => {
 
 //loader function for notelist
 export const fetchNotesByFolder = async ({ params }: LoaderFunctionArgs) => {
+  console.log("you called me here");
   const { folderId } = params;
   if (!folderId) {
     throw new Error("id doesn't exist");
